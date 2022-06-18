@@ -1,0 +1,146 @@
+package dev.shreyaspatil.permissionFlow
+
+import android.content.Context
+import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.getInstance
+import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.init
+import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.flow.StateFlow
+import java.util.concurrent.Executors
+
+/**
+ * A utility class which provides a functionality for observing state of a permission (whether it's
+ * granted or not) with reactive coroutine stream i.e. [StateFlow].
+ *
+ * This takes care of listening to permission state change from any screen throughout the
+ * application so that you can listen to permission in any layer of architecture within app.
+ *
+ * To retrieve the instance, use [getInstance] method but make sure to initialize it with [init]
+ * method before retrieving instance. Otherwise, it'll throw [IllegalStateException]
+ *
+ * Example usage:
+ *
+ * **1. Initialization**
+ *
+ *```
+ *  class MyApplication: Application() {
+ *      override fun onCreate() {
+ *          super.onCreate()
+ *          PermissionFlow.init(this)
+ *      }
+ *  }
+ *```
+ *
+ * **2. Observing permission**
+ *
+ * ```
+ *  val permissionFlow = PermissionFlow.getInstance()
+ *
+ *  fun observeContactsPermission() {
+ *      coroutineScope.launch {
+ *          permissionFlow[android.Manifest.permission.READ_CONTACTS].collect { isGranted ->
+ *              if (isGranted) {
+ *                  // Do something
+ *              }
+ *          }
+ *      }
+ *  }
+ *```
+ *
+ * **3. Launching permission**
+ *
+ * ```
+ *  class MyActivity: AppCompatActivity() {
+ *      private val permissionLauncher = registerForPermissionFlowRequestsResult()
+ *
+ *      fun askContactPermission() {
+ *          permissionLauncher.launch(android.Manifest.permission.READ_CONTACTS)
+ *      }
+ *  }
+ * ```
+ *
+ * This utility tries to listen to permission state change which may not happen within a application
+ * (_e.g. user trying to allow permission from app settings_), but doesn't guarantee that you'll
+ * always get a updated state at the accurate instant.
+ */
+interface PermissionFlow {
+    /**
+     * Returns [StateFlow] for a given [permission]
+     *
+     * @param permission Unique permission identity
+     * (for e.g. [android.Manifest.permission.READ_CONTACTS])
+     */
+    operator fun get(permission: String): StateFlow<Boolean>
+
+    /**
+     * This helps to check if specified [permissions] are changed and it verifies it and updates
+     * the state of permissions which are being observed via [get] method.
+     *
+     * This can be useful when you are not using result launcher which is provided with this library
+     * and manually handling permission request and want to update the state of permission in this
+     * library so that flows which are being observed should get an updated state.
+     *
+     * Example usage:
+     *
+     * In this example, we are not using result launcher provided by this library. So we are
+     * manually notifying library about state change of a permission.
+     *
+     * ```
+     *  class MyActivity: AppCompatActivity() {
+     *      private val permissionFlow = PermissionFlow.getInstance()
+     *      private val permissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
+     *          permissionFlow.notifyPermissionsChanged(android.Manifest.permission.READ_CONTACTS)
+     *      }
+     *  }
+     * ```
+     *
+     * @param permissions List of permissions
+     */
+    fun notifyPermissionsChanged(vararg permissions: String)
+
+    /**
+     * Starts listening the changes of state of permissions.
+     *
+     * Ideally it automatically starts listening lazily when [get] method is used for the first
+     * time. But this can be used to start to listen again after stopping listening
+     * with [stopListening].
+     */
+    fun startListening()
+
+    /**
+     * Stops listening to the state changes of permissions throughout the application.
+     * This means the state of permission retrieved with [get] method will not be updated after
+     * stopping listening. To start to listen again, use [startListening] method.
+     */
+    fun stopListening()
+
+    companion object {
+        private val DEFAULT_DISPATCHER = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
+
+        /**
+         * Initializes this [PermissionFlow] instance with specified arguments.
+         *
+         * @param context The Android's [Context]. Application context is recommended.
+         * @param dispatcher Coroutine dispatcher to be used in the [PermissionFlow]. By default,
+         * it utilizes dispatcher having fixed two number of threads.
+         */
+        fun init(context: Context, dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER) {
+            PermissionFlowImpl.init(context, dispatcher)
+        }
+
+        /**
+         * Returns an instance with default implementation of [PermissionFlow].
+         *
+         * @throws IllegalStateException If method [init] is not called before using this method.
+         *
+         * @return Instance of [PermissionFlow].
+         */
+        fun getInstance(): PermissionFlow = PermissionFlowImpl.instance
+            ?: error("Failed to create instance of PermissionFlow. Did you forget to call `PermissionFlow.init(context)`?")
+    }
+}
+
+
+
+
