@@ -18,7 +18,7 @@
         android:theme="@style/Theme.PermissionFlow"
         tools:targetApi="31">
         <activity
-            android:name="dev.shreyaspatil.permissionFlow.example.MainActivity"
+            android:name="dev.shreyaspatil.permissionFlow.example.ui.ContactsActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
