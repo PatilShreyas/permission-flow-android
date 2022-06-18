@@ -12,6 +12,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "PermissionFlow"
 include ':app'
 include ':permissionFlow'
