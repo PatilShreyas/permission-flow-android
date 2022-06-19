@@ -35,6 +35,10 @@ val Application.activityForegroundEventFlow
             private var wasInMultiWindowMode: Boolean? = null
             private var wasInPictureInPictureMode: Boolean? = null
 
+            /**
+             * Whenever activity receives onStart() lifecycle callback, emit foreground event only
+             * when activity hasn't changed configurations.
+             */
             override fun onActivityStarted(activity: Activity) {
                 if (isActivityChangingConfigurations == false) {
                     trySend(Unit)
@@ -50,6 +54,9 @@ val Application.activityForegroundEventFlow
             /**
              * Whenever application is resized after being in in PiP or multi-window mode, or exits
              * from these modes, onResumed() lifecycle callback is triggered.
+             *
+             * Here we assume that user has changed permission from app settings after being in
+             * PiP or multi-window mode. So whenever these modes are exited, emit foreground event.
              */
             override fun onActivityResumed(activity: Activity) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
