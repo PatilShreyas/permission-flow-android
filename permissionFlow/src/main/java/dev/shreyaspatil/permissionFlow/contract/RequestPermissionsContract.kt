@@ -21,6 +21,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsResult
 
@@ -32,9 +33,10 @@ import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsRe
  * Refer to [ComponentActivity.registerForPermissionFlowRequestsResult] for actual usage.
  */
 
-class RequestPermissionsContract : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
-
-    private val contract = ActivityResultContracts.RequestMultiplePermissions()
+class RequestPermissionsContract(
+    private val contract: RequestMultiplePermissions = RequestMultiplePermissions(),
+    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance()
+) : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
 
     override fun createIntent(context: Context, input: Array<String>?): Intent {
         return contract.createIntent(context, input ?: emptyArray())
@@ -43,7 +45,7 @@ class RequestPermissionsContract : ActivityResultContract<Array<String>, Map<Str
     override fun parseResult(resultCode: Int, intent: Intent?): Map<String, Boolean> {
         return contract.parseResult(resultCode, intent).also {
             val permissions = it.keys.filterNotNull().toTypedArray()
-            PermissionFlow.getInstance().notifyPermissionsChanged(*permissions)
+            permissionFlow.notifyPermissionsChanged(*permissions)
         }
     }
 }
