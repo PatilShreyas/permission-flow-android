@@ -37,7 +37,7 @@ class RequestPermissionsContractTest {
         contract.createIntent(context, permissions)
 
         // Then: The context and permissions should be delegated to original contract
-        verify { requestMultiplePermissions.createIntent(context, permissions) }
+        verify(exactly = 1) { requestMultiplePermissions.createIntent(context, permissions) }
     }
 
     @Test
@@ -53,6 +53,6 @@ class RequestPermissionsContractTest {
         assertEquals(expectedResult, actualResult)
 
         // Then: PermissionFlow should be notified with updated permissions
-        verify { permissionFlow.notifyPermissionsChanged("A", "B", "C") }
+        verify(exactly = 1) { permissionFlow.notifyPermissionsChanged("A", "B", "C") }
     }
 }

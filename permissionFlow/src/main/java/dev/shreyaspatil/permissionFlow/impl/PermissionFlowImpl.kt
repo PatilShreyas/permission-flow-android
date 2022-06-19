@@ -17,6 +17,7 @@ package dev.shreyaspatil.permissionFlow.impl
 
 import android.app.Application
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,7 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * Default implementation of a [PermissionFlow]
  */
-internal class PermissionFlowImpl private constructor(
+internal class PermissionFlowImpl @VisibleForTesting constructor(
     private val watchmen: PermissionWatchmen
 ) : PermissionFlow {
 
