@@ -13,8 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:JvmName("ComponentActivityExt")
-@file:Suppress("UNUSED_PARAMETER")
+@file:JvmName("PermissionResultLauncher")
 
 package dev.shreyaspatil.permissionFlow.utils
 
@@ -22,12 +21,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.ActivityResultRegistry
+import androidx.fragment.app.Fragment
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
 
 /**
- * Returns a [ActivityResultLauncher] which internally notifies [PermissionFlow] about the state
- * change whenever permission state is changed with this launcher.
+ * Returns a [ActivityResultLauncher] for this Activity which internally notifies [PermissionFlow]
+ * about the state change whenever permission state is changed with this launcher.
  *
  * Usage:
  *
@@ -49,6 +49,40 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
 fun ComponentActivity.registerForPermissionFlowRequestsResult(
     activityResultRegistry: ActivityResultRegistry = getActivityResultRegistry(),
     callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback()
-) = registerForActivityResult(RequestPermissionsContract(), callback)
+): ActivityResultLauncher<Array<String>> = registerForActivityResult(
+    RequestPermissionsContract(),
+    activityResultRegistry,
+    callback
+)
+
+/**
+ * Returns a [ActivityResultLauncher] for this Fragment which internally notifies [PermissionFlow]
+ * about the state change whenever permission state is changed with this launcher.
+ *
+ * Usage:
+ *
+ * ```
+ *  class MyFragment: Fragment() {
+ *      private val permissionLauncher = registerForPermissionFlowRequestsResult()
+ *
+ *      fun askContactPermission() {
+ *          permissionLauncher.launch(android.Manifest.permission.READ_CONTACTS)
+ *      }
+ *  }
+ * ```
+ *
+ * @param activityResultRegistry Activity result registry. By default it uses Activity's Result
+ * registry.
+ * @param callback Callback of a permission state change.
+ */
+@JvmOverloads
+fun Fragment.registerForPermissionFlowRequestsResult(
+    activityResultRegistry: ActivityResultRegistry = requireActivity().activityResultRegistry,
+    callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback()
+): ActivityResultLauncher<Array<String>> = registerForActivityResult(
+    RequestPermissionsContract(),
+    activityResultRegistry,
+    callback
+)
 
 private fun <T> emptyCallback() = ActivityResultCallback<T> {}
