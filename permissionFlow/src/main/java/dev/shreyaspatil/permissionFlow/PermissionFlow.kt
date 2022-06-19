@@ -19,10 +19,10 @@ import android.content.Context
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.getInstance
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.init
 import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
+import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.StateFlow
-import java.util.concurrent.Executors
 
 /**
  * A utility class which provides a functionality for observing state of a permission (whether it's
@@ -140,6 +140,7 @@ interface PermissionFlow {
          * @param dispatcher Coroutine dispatcher to be used in the [PermissionFlow]. By default,
          * it utilizes dispatcher having fixed two number of threads.
          */
+        @JvmStatic
         fun init(context: Context, dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER) {
             PermissionFlowImpl.init(context, dispatcher)
         }
@@ -151,6 +152,7 @@ interface PermissionFlow {
          *
          * @return Instance of [PermissionFlow].
          */
+        @JvmStatic
         fun getInstance(): PermissionFlow = PermissionFlowImpl.instance
             ?: error("Failed to create instance of PermissionFlow. Did you forget to call `PermissionFlow.init(context)`?")
     }
