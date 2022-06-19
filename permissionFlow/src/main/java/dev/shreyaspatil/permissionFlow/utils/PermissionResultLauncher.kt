@@ -41,16 +41,18 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
  *  }
  * ```
  *
+ * @param requestPermissionsContract A contract specifying permission request and result.
  * @param activityResultRegistry Activity result registry. By default it uses Activity's Result
  * registry.
  * @param callback Callback of a permission state change.
  */
 @JvmOverloads
 fun ComponentActivity.registerForPermissionFlowRequestsResult(
+    requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
     activityResultRegistry: ActivityResultRegistry = getActivityResultRegistry(),
     callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback()
 ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
-    RequestPermissionsContract(),
+    requestPermissionsContract,
     activityResultRegistry,
     callback
 )
@@ -71,16 +73,18 @@ fun ComponentActivity.registerForPermissionFlowRequestsResult(
  *  }
  * ```
  *
+ * @param requestPermissionsContract A contract specifying permission request and result.
  * @param activityResultRegistry Activity result registry. By default it uses Activity's Result
  * registry.
  * @param callback Callback of a permission state change.
  */
 @JvmOverloads
 fun Fragment.registerForPermissionFlowRequestsResult(
+    requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
     activityResultRegistry: ActivityResultRegistry = requireActivity().activityResultRegistry,
     callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback()
 ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
-    RequestPermissionsContract(),
+    requestPermissionsContract,
     activityResultRegistry,
     callback
 )
