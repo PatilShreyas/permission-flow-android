@@ -19,10 +19,10 @@ import android.content.Context
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.getInstance
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.init
 import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
-import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.flow.StateFlow
+import java.util.concurrent.Executors
 
 /**
  * A utility class which provides a functionality for observing state of a permission (whether it's

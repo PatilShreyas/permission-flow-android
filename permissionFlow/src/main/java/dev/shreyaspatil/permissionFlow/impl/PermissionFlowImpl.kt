@@ -17,7 +17,6 @@ package dev.shreyaspatil.permissionFlow.impl
 
 import android.app.Application
 import android.content.Context
-import androidx.annotation.VisibleForTesting
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
 import kotlinx.coroutines.CoroutineDispatcher
@@ -26,14 +25,9 @@ import kotlinx.coroutines.flow.StateFlow
 /**
  * Default implementation of a [PermissionFlow]
  */
-internal class PermissionFlowImpl @VisibleForTesting constructor(
+internal class PermissionFlowImpl private constructor(
     private val watchmen: PermissionWatchmen
 ) : PermissionFlow {
-
-    private constructor(
-        application: Application,
-        dispatcher: CoroutineDispatcher
-    ) : this(PermissionWatchmen(application, dispatcher))
 
     override fun get(permission: String): StateFlow<Boolean> {
         return watchmen.watch(permission)
@@ -59,7 +53,11 @@ internal class PermissionFlowImpl @VisibleForTesting constructor(
         @Synchronized
         fun init(context: Context, dispatcher: CoroutineDispatcher) {
             if (instance == null) {
-                instance = PermissionFlowImpl(context.applicationContext as Application, dispatcher)
+                val watchmen = PermissionWatchmen(
+                    application = context.applicationContext as Application,
+                    dispatcher = dispatcher
+                )
+                instance = PermissionFlowImpl(watchmen)
             }
         }
     }
