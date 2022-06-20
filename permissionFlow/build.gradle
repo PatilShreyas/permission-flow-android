@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlinx.kover'
 }
 
 android {
@@ -27,16 +28,35 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    testOptions {
+        unitTests.all {
+            if (name == "testDebugUnitTest") {
+                kover {
+                    disabled = false
+                    binaryReportFile.set(file("$buildDir/coverageReport/coverageReport.bin"))
+                }
+            }
+        }
+    }
 }
 
 dependencies {
+    // Android
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
 
+    // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
 
+    // Testing
     testImplementation "junit:junit:$jUnitVersion"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "app.cash.turbine:turbine:$turbineVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+}
+
+tasks.koverHtmlReport {
+    enabled = true
+    htmlReportDir.set(layout.buildDirectory.dir("coverageReport/html"))
 }
