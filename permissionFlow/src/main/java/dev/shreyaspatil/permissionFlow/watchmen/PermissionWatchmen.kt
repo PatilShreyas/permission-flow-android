@@ -81,9 +81,9 @@ internal class PermissionWatchmen(
 
     @Synchronized
     fun wakeUp() {
-        notifyAllPermissionsChanged()
         watchPermissionEvents()
         watchActivities()
+        notifyAllPermissionsChanged()
     }
 
     @Synchronized
