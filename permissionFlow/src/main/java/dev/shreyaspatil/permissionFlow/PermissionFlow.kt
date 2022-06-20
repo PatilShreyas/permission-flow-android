@@ -96,6 +96,10 @@ interface PermissionFlow {
      * and manually handling permission request and want to update the state of permission in this
      * library so that flows which are being observed should get an updated state.
      *
+     * If [stopListening] is called earlier and hasn't started listening again, notifying
+     * permission doesn't work. Its new state is automatically calculated after starting
+     * listening to states again by calling [startListening] method.
+     *
      * Example usage:
      *
      * In this example, we are not using result launcher provided by this library. So we are
