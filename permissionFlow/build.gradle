@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlinx.kover'
     id 'com.vanniktech.maven.publish'
+    id 'org.jetbrains.dokka'
 }
 
 android {
@@ -60,4 +61,14 @@ dependencies {
 tasks.koverHtmlReport {
     enabled = true
     htmlReportDir.set(layout.buildDirectory.dir("coverageReport/html"))
+}
+
+dokkaHtml.configure {
+    outputDirectory.set(rootProject.mkdir("docs"))
+
+    dokkaSourceSets {
+        named("main") {
+            noAndroidSdkLink.set(false)
+        }
+    }
 }
