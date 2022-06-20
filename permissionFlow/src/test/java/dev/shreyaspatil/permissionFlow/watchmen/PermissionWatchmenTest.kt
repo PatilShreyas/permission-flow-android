@@ -67,7 +67,7 @@ class PermissionWatchmenTest {
         dispatcher.scheduler.runCurrent()
         verify(exactly = 1) { application.registerActivityLifecycleCallbacks(any()) }
     }
-    
+
     @Test
     fun shouldReturnSameInstance_whenWatchingPermissionMoreThanOnce() {
         // Given: A permission to be observed
