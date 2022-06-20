@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.callbackFlow
  * configuration change) or any activity is resumed after being in multi-window or
  * picture-in-picture mode.
  */
-val Application.activityForegroundEventFlow
+internal val Application.activityForegroundEventFlow
     get() = callbackFlow {
         val callback = object : Application.ActivityLifecycleCallbacks {
             private var isActivityChangingConfigurations: Boolean? = null
