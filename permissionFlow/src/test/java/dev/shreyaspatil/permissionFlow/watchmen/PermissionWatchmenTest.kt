@@ -67,6 +67,20 @@ class PermissionWatchmenTest {
         dispatcher.scheduler.runCurrent()
         verify(exactly = 1) { application.registerActivityLifecycleCallbacks(any()) }
     }
+    
+    @Test
+    fun shouldReturnSameInstance_whenWatchingPermissionMoreThanOnce() {
+        // Given: A permission to be observed
+        val permission = "permission"
+        mockPermissions(permission to true)
+
+        // When: A permission state is watched more than once
+        val flow1 = watchmen.watch(permission)
+        val flow2 = watchmen.watch(permission)
+
+        // Then: Same instance should be returned
+        assert(flow1 === flow2)
+    }
 
     @Test
     fun shouldUpdateFlowState_whenPermissionChangesAreNotified() {
