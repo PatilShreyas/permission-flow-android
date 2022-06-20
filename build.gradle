@@ -2,6 +2,7 @@
 buildscript {
     ext {
         agpVersion = '7.2.1'
+        mavenPublishVersion = '0.20.0'
         kotlinVersion = '1.6.21'
         coroutinesVersion = '1.6.2'
         appCompatVersion = '1.4.2'
@@ -21,6 +22,7 @@ plugins {
     id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
     id 'com.diffplug.spotless' version "$spotlessVersion" apply false
     id("org.jetbrains.kotlinx.kover") version "$koverVersion" apply false
+    id("com.vanniktech.maven.publish") version "$mavenPublishVersion" apply false
 }
 
 subprojects {
