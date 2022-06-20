@@ -85,6 +85,23 @@ class PermissionWatchmenTest {
     }
 
     @Test
+    fun shouldUpdatePermissionFlowState_whenWatchmenWakesAfterSleeping() {
+        // Given: Watching a permission
+        val permission = "permission"
+        mockPermissions(permission to true)
+        val flow = watchmen.watch(permission)
+
+        // When: Watchmen sleeps, permission state changes and watchmen wakes after that
+        watchmen.sleep()
+        mockPermissions(permission to false)
+        watchmen.wakeUp()
+
+        // Then: Permission state should be get updated
+        dispatcher.scheduler.advanceUntilIdle()
+        assertFalse(flow.value)
+    }
+
+    @Test
     fun shouldNotUpdateFlowState_whenPermissionChangesAreNotifiedAndWatchmenIsSleeping() {
         // Given: Watching a permission flow and watchmen is sleeping
         val permission = "permission"
