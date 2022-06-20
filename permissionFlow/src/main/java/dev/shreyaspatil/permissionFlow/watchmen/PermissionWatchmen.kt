@@ -57,7 +57,7 @@ internal class PermissionWatchmen(
     /**
      * A in-memory store for storing permission and its state holder i.e. [StateFlow]
      */
-    private val permissionFlows = mutableMapOf<String, MutableStateFlow<Boolean>>()
+    private val permissionFlows = mutableMapOf<String, PermissionStateFlowDelegate>()
 
     private val permissionEvents = MutableSharedFlow<PermissionEvent>()
 
@@ -98,11 +98,11 @@ internal class PermissionWatchmen(
     @Synchronized
     private fun getOrCreatePermissionStateFlow(permission: String): StateFlow<Boolean> {
         val flow = permissionFlows[permission]
-            ?: MutableStateFlow(isPermissionGranted(permission)).also {
+            ?: PermissionStateFlowDelegate(isPermissionGranted(permission)).also {
                 permissionFlows[permission] = it
             }
 
-        return flow.asStateFlow()
+        return flow.state
     }
 
     /**
@@ -112,7 +112,7 @@ internal class PermissionWatchmen(
         if (watchEventsJob != null && watchEventsJob?.isActive == true) return
         watchEventsJob = watchmenScope.launch {
             permissionEvents.collect { (permission, isGranted) ->
-                permissionFlows[permission]?.value = isGranted
+                permissionFlows[permission]?.setState(isGranted)
             }
         }
     }
@@ -148,7 +148,26 @@ internal class PermissionWatchmen(
         ) == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * A event model for permission event.
+     *
+     * @property permission Name of a permission
+     * @property isGranted State of permission whether it's granted / denied
+     */
     private data class PermissionEvent(val permission: String, val isGranted: Boolean)
+
+    /**
+     * A delegate for [MutableStateFlow] which creates flow for holding state of a permission.
+     */
+    private class PermissionStateFlowDelegate(initialState: Boolean) {
+
+        private val _state = MutableStateFlow<Boolean>(initialState)
+        val state = _state.asStateFlow()
+
+        fun setState(isGranted: Boolean) {
+            _state.value = isGranted
+        }
+    }
 
     companion object {
         private const val DEFAULT_DEBOUNCE_FOR_ACTIVITY_CALLBACK = 5_000L
