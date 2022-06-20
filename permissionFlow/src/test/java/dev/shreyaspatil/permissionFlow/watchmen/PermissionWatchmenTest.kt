@@ -112,6 +112,19 @@ class PermissionWatchmenTest {
     }
 
     @Test
+    fun shouldStartObservingActivityOnceOnce_whenWakingUpMultipleTimes() {
+        // When: Request watchmen to wake-up twice
+        watchmen.wakeUp()
+        dispatcher.scheduler.runCurrent()
+
+        watchmen.wakeUp()
+        dispatcher.scheduler.runCurrent()
+
+        // Then: Should start watching activity foreground events only once
+        verify(exactly = 1) { application.registerActivityLifecycleCallbacks(any()) }
+    }
+
+    @Test
     fun shouldStopObservingActivityEvent_whenSleeping() {
         // When: Requests watchmen to sleep after being waking up
         watchmen.wakeUp()
