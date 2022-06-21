@@ -4,7 +4,7 @@ buildscript {
         agpVersion = '7.2.1'
         mavenPublishVersion = '0.20.0'
         kotlinVersion = '1.6.21'
-        coroutinesVersion = '1.6.2'
+        coroutinesVersion = '1.6.3'
         appCompatVersion = '1.4.2'
         jUnitVersion = '4.13.2'
         mockkVersion = '1.12.4'
