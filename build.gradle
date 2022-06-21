@@ -12,7 +12,7 @@ buildscript {
         spotlessVersion = '6.7.2'
         mavenPublishVersion = '0.20.0'
         ktlintVersion = '0.45.2'
-        koverVersion = "0.5.0"
+        koverVersion = "0.5.1"
     }
 }
 
