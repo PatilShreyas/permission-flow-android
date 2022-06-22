@@ -31,6 +31,10 @@ android {
         jvmTarget = '1.8'
     }
 
+    buildFeatures {
+        buildConfig false
+    }
+
     testOptions {
         unitTests.all {
             if (name == "testDebugUnitTest") {
