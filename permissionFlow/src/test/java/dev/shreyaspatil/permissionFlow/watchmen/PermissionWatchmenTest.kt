@@ -31,6 +31,7 @@ import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -61,11 +62,45 @@ class PermissionWatchmenTest {
         val flow = watchmen.watch(permission)
 
         // Then: StateFlow should be returned with valid value i.e. true (Granted).
-        assertTrue(flow.value)
+        assertTrue(flow.value.isGranted)
 
         // Then: Should start watching activity foreground events.
         dispatcher.scheduler.runCurrent()
         verify(exactly = 1) { application.registerActivityLifecycleCallbacks(any()) }
+    }
+
+    @Test
+    fun shouldWakeUpAndReturnFlow_whenWatchMultiplePermissionForTheFirstTime() {
+        // Given: Multiple Permission
+        val permission1 = "permission-1"
+        val permission2 = "permission-2"
+        mockPermissions(permission1 to true, permission2 to false)
+
+        // When: Starts watching multiple permission for the first time.
+        val flow = watchmen.watchMultiple(arrayOf(permission1, permission2))
+
+        // Then: StateFlow should be returned with valid value i.e. true (Granted).
+        assertTrue(flow.value.permissions[0].isGranted)
+        assertFalse(flow.value.permissions[1].isGranted)
+
+        // Then: Should start watching activity foreground events.
+        dispatcher.scheduler.runCurrent()
+        verify(exactly = 1) { application.registerActivityLifecycleCallbacks(any()) }
+    }
+
+    @Test
+    fun shouldReturnFilteredMultiplePermissionState_whenDuplicatePermissionsAreWatched() {
+        // Given: Multiple Permission
+        val permission1 = "permission-1"
+        val permission2 = "permission-2"
+        mockPermissions(permission1 to true, permission2 to false)
+
+        // When: Starts watching multiple permission having list of repeated permissions
+        val flow = watchmen.watchMultiple(arrayOf(permission1, permission1, permission2))
+
+        // Then: State should only contain list having two items
+        assertEquals(flow.value.permissions.size, 2)
+        assertEquals(flow.value.permissions.map { it.permission }, listOf(permission1, permission2))
     }
 
     @Test
@@ -95,7 +130,25 @@ class PermissionWatchmenTest {
 
         // Then: Current value of flow should be false i.e. Not granted
         dispatcher.scheduler.runCurrent()
-        assertFalse(flow.value)
+        assertFalse(flow.value.isGranted)
+    }
+
+    @Test
+    fun shouldUpdateMultiplePermissionFlowState_whenPermissionChangesAreNotified() {
+        // Given: Watching multiple permission state
+        val permission1 = "permission-1"
+        val permission2 = "permission-2"
+        mockPermissions(permission1 to true, permission2 to false)
+
+        val flow = watchmen.watchMultiple(arrayOf(permission1, permission2))
+
+        // When: Change in state is notified for the these permission
+        mockPermissions(permission2 to true)
+        watchmen.notifyPermissionsChanged(permissions = arrayOf(permission2))
+
+        // Then: All permissions should be granted
+        dispatcher.scheduler.runCurrent()
+        assertTrue(flow.value.allGranted)
     }
 
     @Test
@@ -112,7 +165,25 @@ class PermissionWatchmenTest {
 
         // Then: Permission state should be get updated
         dispatcher.scheduler.advanceUntilIdle()
-        assertFalse(flow.value)
+        assertFalse(flow.value.isGranted)
+    }
+
+    @Test
+    fun shouldUpdateMultiplePermissionFlowState_whenWatchmenWakesAfterSleeping() {
+        // Given: Watching multiple permissions
+        val permission1 = "permission-1"
+        val permission2 = "permission-2"
+        mockPermissions(permission1 to true, permission2 to false)
+        val flow = watchmen.watchMultiple(arrayOf(permission1, permission2))
+
+        // When: Watchmen sleeps, permission state changes and watchmen wakes after that
+        watchmen.sleep()
+        mockPermissions(permission1 to true, permission2 to true)
+        watchmen.wakeUp()
+
+        // Then: Permission state should be get updated
+        dispatcher.scheduler.advanceUntilIdle()
+        assertTrue(flow.value.permissions[1].isGranted)
     }
 
     @Test
@@ -129,7 +200,25 @@ class PermissionWatchmenTest {
 
         // Then: Current value of flow should not be changed i.e. it should remain as Granted
         dispatcher.scheduler.runCurrent()
-        assertTrue(flow.value)
+        assertTrue(flow.value.isGranted)
+    }
+
+    @Test
+    fun shouldNotUpdateMultipleFlowState_whenPermissionChangesAreNotifiedAndWatchmenIsSleeping() {
+        // Given: Watching a permission flow and watchmen is sleeping
+        val permission1 = "permission-1"
+        val permission2 = "permission-2"
+        mockPermissions(permission1 to true, permission2 to false)
+        val flow = watchmen.watchMultiple(arrayOf(permission1, permission2))
+        watchmen.sleep()
+
+        // When: Change in state is notified for the same permission
+        mockPermissions(permission2 to true)
+        watchmen.notifyPermissionsChanged(permissions = arrayOf(permission2))
+
+        // Then: Current value of flow should not be changed i.e. it should remain as Granted
+        dispatcher.scheduler.runCurrent()
+        assertFalse(flow.value.permissions[1].isGranted)
     }
 
     @Test
@@ -196,9 +285,9 @@ class PermissionWatchmenTest {
 
         // Then: Permission state for all active flows should be get updated after debounce time.
         advanceTimeBy(6_000L) // Debounce time is 5 seconds, so 5 + 1 = 6 seconds
-        assertTrue(permissionFlow1.value)
-        assertTrue(permissionFlow2.value)
-        assertTrue(permissionFlow3.value)
+        assertTrue(permissionFlow1.value.isGranted)
+        assertTrue(permissionFlow2.value.isGranted)
+        assertTrue(permissionFlow3.value.isGranted)
     }
 
     /**

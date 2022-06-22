@@ -15,6 +15,8 @@
  */
 package dev.shreyaspatil.permissionFlow.impl
 
+import dev.shreyaspatil.permissionFlow.MultiplePermissionState
+import dev.shreyaspatil.permissionFlow.PermissionState
 import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
 import io.mockk.every
 import io.mockk.mockk
@@ -36,13 +38,26 @@ class PermissionFlowImplTest {
     }
 
     @Test
-    fun testGetPermission() {
+    fun testGetPermissionState() {
         // Given: Permission flow
-        val expectedFlow = MutableStateFlow(true)
+        val expectedFlow = MutableStateFlow(PermissionState("A", true))
         every { watchmen.watch("A") } returns expectedFlow
 
         // When: Flow for any permission is retrieved
-        val actualFlow = permissionFlow["A"]
+        val actualFlow = permissionFlow.getPermissionState("A")
+
+        // Then: Correct flow should be returned
+        assertEquals(expectedFlow, actualFlow)
+    }
+
+    @Test
+    fun testGetMultiplePermissionState() {
+        // Given: Permission flow
+        val expectedFlow = MutableStateFlow(MultiplePermissionState(emptyList()))
+        every { watchmen.watchMultiple(arrayOf("A", "B")) } returns expectedFlow
+
+        // When: Flow for multiple permissions is retrieved
+        val actualFlow = permissionFlow.getMultiplePermissionState("A", "B")
 
         // Then: Correct flow should be returned
         assertEquals(expectedFlow, actualFlow)
