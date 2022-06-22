@@ -32,7 +32,7 @@ class ContactsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContactsBinding
     private val viewModel by viewModels<ContactsViewModel> {
-        ContactsViewModel.Factory(contentResolver)
+        ContactsViewModel.FactoryProvider(contentResolver).get()
     }
 
     private val permissionLauncher = registerForPermissionFlowRequestsResult()
