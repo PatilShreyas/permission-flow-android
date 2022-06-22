@@ -18,7 +18,10 @@ package dev.shreyaspatil.permissionFlow.watchmen
 import android.app.Application
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import dev.shreyaspatil.permissionFlow.MultiplePermissionState
+import dev.shreyaspatil.permissionFlow.PermissionState
 import dev.shreyaspatil.permissionFlow.utils.activityForegroundEventFlow
+import dev.shreyaspatil.permissionFlow.utils.stateFlow.combineStates
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -61,9 +64,22 @@ internal class PermissionWatchmen(
 
     private val permissionEvents = MutableSharedFlow<PermissionEvent>()
 
-    fun watch(permission: String): StateFlow<Boolean> {
+    fun watch(permission: String): StateFlow<PermissionState> {
+        // Wakeup watchmen if sleeping
         wakeUp()
         return getOrCreatePermissionStateFlow(permission)
+    }
+
+    fun watchMultiple(permissions: Array<String>): StateFlow<MultiplePermissionState> {
+        // Wakeup watchmen if sleeping
+        wakeUp()
+
+        val permissionStates = permissions
+            .distinct()
+            .map { getOrCreatePermissionStateFlow(it) }
+            .toTypedArray()
+
+        return combineStates(*permissionStates) { MultiplePermissionState(it.toList()) }
     }
 
     fun notifyPermissionsChanged(permissions: Array<String>) {
@@ -96,13 +112,12 @@ internal class PermissionWatchmen(
      * for [permission] and returns a read-only [StateFlow] for a [permission].
      */
     @Synchronized
-    private fun getOrCreatePermissionStateFlow(permission: String): StateFlow<Boolean> {
-        val flow = permissionFlows[permission]
-            ?: PermissionStateFlowDelegate(isPermissionGranted(permission)).also {
-                permissionFlows[permission] = it
-            }
-
-        return flow.state
+    private fun getOrCreatePermissionStateFlow(permission: String): StateFlow<PermissionState> {
+        val delegate = permissionFlows[permission] ?: run {
+            val initialState = PermissionState(permission, isPermissionGranted(permission))
+            PermissionStateFlowDelegate(initialState).also { permissionFlows[permission] = it }
+        }
+        return delegate.state
     }
 
     /**
@@ -112,7 +127,7 @@ internal class PermissionWatchmen(
         if (watchEventsJob != null && watchEventsJob?.isActive == true) return
         watchEventsJob = watchmenScope.launch {
             permissionEvents.collect { (permission, isGranted) ->
-                permissionFlows[permission]?.setState(isGranted)
+                permissionFlows[permission]?.setState(PermissionState(permission, isGranted))
             }
         }
     }
@@ -159,13 +174,13 @@ internal class PermissionWatchmen(
     /**
      * A delegate for [MutableStateFlow] which creates flow for holding state of a permission.
      */
-    private class PermissionStateFlowDelegate(initialState: Boolean) {
+    private class PermissionStateFlowDelegate(initialState: PermissionState) {
 
-        private val _state = MutableStateFlow<Boolean>(initialState)
+        private val _state = MutableStateFlow<PermissionState>(initialState)
         val state = _state.asStateFlow()
 
-        fun setState(isGranted: Boolean) {
-            _state.value = isGranted
+        fun setState(newState: PermissionState) {
+            _state.value = newState
         }
     }
 

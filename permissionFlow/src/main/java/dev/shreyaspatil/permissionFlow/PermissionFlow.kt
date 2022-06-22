@@ -54,11 +54,12 @@ import java.util.concurrent.Executors
  *
  *  fun observeContactsPermission() {
  *      coroutineScope.launch {
- *          permissionFlow[android.Manifest.permission.READ_CONTACTS].collect { isGranted ->
- *              if (isGranted) {
- *                  // Do something
+ *          permissionFlow.getPermissionState(android.Manifest.permission.READ_CONTACTS)
+ *              .collect { state ->
+ *                  if (state.isGranted) {
+ *                      // Do something
+ *                  }
  *              }
- *          }
  *      }
  *  }
  *```
@@ -85,12 +86,52 @@ interface PermissionFlow {
      *
      * @param permission Unique permission identity
      * (for e.g. [android.Manifest.permission.READ_CONTACTS])
+     *
+     * Example:
+     *
+     * ```
+     *  permissionFlow.getPermissionState(android.Manifest.permission.READ_CONTACTS)
+     *      .collect { state ->
+     *          if (state.isGranted) {
+     *              // Do something
+     *          }
+     *      }
+     * ```
      */
-    operator fun get(permission: String): StateFlow<Boolean>
+    fun getPermissionState(permission: String): StateFlow<PermissionState>
+
+    /**
+     * Returns [StateFlow] of a combining state for [permissions]
+     *
+     * @param permissions List of permissions
+     * (for e.g. [android.Manifest.permission.READ_CONTACTS], [android.Manifest.permission.READ_SMS])
+     *
+     * Example:
+     *
+     * ```
+     *  permissionFlow.getMultiplePermissionState(
+     *      android.Manifest.permission.READ_CONTACTS,
+     *      android.Manifest.permission.READ_SMS
+     *  ).collect { state ->
+     *      // All permission states
+     *      val allPermissions = state.permissions
+     *
+     *      // Check whether all permissions are granted
+     *      val allGranted = state.allGranted
+     *
+     *      // List of granted permissions
+     *      val grantedPermissions = state.grantedPermissions
+     *
+     *      // List of denied permissions
+     *      val deniedPermissions = state.deniedPermissions
+     *  }
+     * ```
+     */
+    fun getMultiplePermissionState(vararg permissions: String): StateFlow<MultiplePermissionState>
 
     /**
      * This helps to check if specified [permissions] are changed and it verifies it and updates
-     * the state of permissions which are being observed via [get] method.
+     * the state of permissions which are being observed via [getMultiplePermissionState] method.
      *
      * This can be useful when you are not using result launcher which is provided with this library
      * and manually handling permission request and want to update the state of permission in this
@@ -121,7 +162,7 @@ interface PermissionFlow {
     /**
      * Starts listening the changes of state of permissions.
      *
-     * Ideally it automatically starts listening lazily when [get] method is used for the first
+     * Ideally it automatically starts listening lazily when [getMultiplePermissionState] method is used for the first
      * time. But this can be used to start to listen again after stopping listening
      * with [stopListening].
      */
@@ -129,7 +170,7 @@ interface PermissionFlow {
 
     /**
      * Stops listening to the state changes of permissions throughout the application.
-     * This means the state of permission retrieved with [get] method will not be updated after
+     * This means the state of permission retrieved with [getMultiplePermissionState] method will not be updated after
      * stopping listening. To start to listen again, use [startListening] method.
      */
     fun stopListening()
