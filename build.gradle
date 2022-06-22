@@ -3,7 +3,9 @@ buildscript {
     ext {
         agpVersion = '7.2.1'
         mavenPublishVersion = '0.20.0'
-        kotlinVersion = '1.6.21'
+        kotlinVersion = '1.6.10'
+        composeVersion = '1.1.1'
+        activityVersion = '1.4.0'
         coroutinesVersion = '1.6.2'
         appCompatVersion = '1.4.2'
         jUnitVersion = '4.13.2'

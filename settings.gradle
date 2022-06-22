@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "PermissionFlow"
 include ':app'
 include ':permissionFlow'
+include ':permissionFlowCompose'
