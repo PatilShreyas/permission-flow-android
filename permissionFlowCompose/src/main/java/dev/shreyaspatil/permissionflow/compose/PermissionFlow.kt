@@ -47,4 +47,3 @@ fun rememberPermissionFlowRequestLauncher(onResult: (Map<String, Boolean>) -> Un
         onResult = onResult
     )
 }
-
