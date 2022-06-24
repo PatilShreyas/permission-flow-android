@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.shreyaspatil.permissionFlow.example.ui
+package dev.shreyaspatil.permissionFlow.example.ui.contacts
 
 import android.Manifest
 import android.os.Bundle
@@ -32,7 +32,7 @@ class ContactsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContactsBinding
     private val viewModel by viewModels<ContactsViewModel> {
-        ContactsViewModel.Factory(contentResolver)
+        ContactsViewModel.FactoryProvider(contentResolver).get()
     }
 
     private val permissionLauncher = registerForPermissionFlowRequestsResult()

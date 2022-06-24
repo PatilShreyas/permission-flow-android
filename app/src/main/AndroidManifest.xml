@@ -5,6 +5,9 @@
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CALL_LOG" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name="dev.shreyaspatil.permissionFlow.example.ExampleApplication"
@@ -18,7 +21,7 @@
         android:theme="@style/Theme.PermissionFlow"
         tools:targetApi="31">
         <activity
-            android:name="dev.shreyaspatil.permissionFlow.example.ui.ContactsActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +29,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.composePermission.ComposePermissionActivity"/>
+        <activity android:name=".ui.multipermission.MultiPermissionActivity"/>
+        <activity android:name=".ui.contacts.ContactsActivity"/>
     </application>
 
 </manifest>

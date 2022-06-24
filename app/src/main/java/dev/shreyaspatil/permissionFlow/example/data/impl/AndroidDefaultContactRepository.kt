@@ -36,9 +36,9 @@ class AndroidDefaultContactRepository(
 ) : ContactRepository {
 
     override val allContacts: Flow<List<Contact>> = permissionFlow
-        .get(Manifest.permission.READ_CONTACTS)
-        .transform { isGranted ->
-            if (isGranted) {
+        .getPermissionState(Manifest.permission.READ_CONTACTS)
+        .transform { state ->
+            if (state.isGranted) {
                 emit(getContacts())
             } else {
                 emit(emptyList())

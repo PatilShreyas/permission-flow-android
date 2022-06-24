@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.shreyaspatil.permissionFlow.example.ui
+package dev.shreyaspatil.permissionFlow.example.ui.contacts
 
 import android.Manifest
 import android.content.ContentResolver
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.ViewModelInitializer
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import dev.shreyaspatil.permissionFlow.example.data.ContactRepository
 import dev.shreyaspatil.permissionFlow.example.data.impl.AndroidDefaultContactRepository
@@ -52,8 +53,8 @@ class ContactsViewModel(
 
     private fun observeContactsPermission() {
         viewModelScope.launch {
-            permissionFlow.get(Manifest.permission.READ_CONTACTS).collect { isGranted ->
-                if (isGranted) {
+            permissionFlow.getPermissionState(Manifest.permission.READ_CONTACTS).collect { state ->
+                if (state.isGranted) {
                     setNextState(ContactsUiState.ContactPermissionGranted)
                 } else {
                     setNextState(ContactsUiState.ContactPermissionNotGranted)
@@ -66,9 +67,12 @@ class ContactsViewModel(
         _states.trySend(nextState)
     }
 
-    class Factory(private val contentResolver: ContentResolver) : ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ContactsViewModel(AndroidDefaultContactRepository(contentResolver)) as T
+    class FactoryProvider(private val contentResolver: ContentResolver) {
+        fun get(): ViewModelProvider.Factory {
+            val initializer = ViewModelInitializer(ContactsViewModel::class.java) {
+                ContactsViewModel(AndroidDefaultContactRepository(contentResolver))
+            }
+            return ViewModelProvider.Factory.from(initializer)
         }
     }
 }
