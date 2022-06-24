@@ -26,6 +26,26 @@ import dev.shreyaspatil.permissionFlow.PermissionFlow
 import dev.shreyaspatil.permissionFlow.PermissionState
 import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
 
+/**
+ * Creates a [PermissionState] for a [permission] that is remembered across compositions.
+ *
+ * Example:
+ * ```
+ *  @Composable
+ *  fun PermissionDemo() {
+ *      val state by rememberPermissionState(Manifest.permission.CAMERA)
+ *      if (state.isGranted) {
+ *          // Render something
+ *      } else {
+ *          // Render something else
+ *      }
+ *  }
+ * ```
+ *
+ * @param permission The permission to observe.
+ *
+ * @throws IllegalStateException If [PermissionFlow] is not initialized
+ */
 @Composable
 fun rememberPermissionState(
     permission: String
@@ -33,6 +53,36 @@ fun rememberPermissionState(
     PermissionFlow.getInstance().getPermissionState(permission)
 }.collectAsState()
 
+/**
+ * Creates a [MultiplePermissionState] for a multiple [permissions] that is remembered
+ * across compositions.
+ *
+ * Example:
+ * ```
+ *  @Composable
+ *  fun PermissionDemo() {
+ *      val state by rememberMultiplePermissionState(
+ *          Manifest.permission.CAMERA
+ *          Manifest.permission.ACCESS_FINE_LOCATION,
+ *          Manifest.permission.READ_CONTACTS
+ *      )
+ *
+ *      if (state.allGranted) {
+ *          // Render something
+ *      }
+ *
+ *      val grantedPermissions = state.grantedPermissions
+ *      // Do something with `grantedPermissions`
+ *
+ *      val deniedPermissions = state.deniedPermissions
+ *      // Do something with `deniedPermissions`
+ *  }
+ * ```
+ *
+ * @param permissions The list of permissions to observe.
+ *
+ * @throws IllegalStateException If [PermissionFlow] is not initialized
+ */
 @Composable
 fun rememberMultiplePermissionState(
     vararg permissions: String
@@ -40,8 +90,32 @@ fun rememberMultiplePermissionState(
     PermissionFlow.getInstance().getMultiplePermissionState(*permissions)
 }.collectAsState()
 
+/**
+ * Creates a [ManagedActivityResultLauncher] that is tied with [PermissionFlow] APIs and
+ * remembered across recompositions.
+ *
+ * Example:
+ *
+ * ```
+ *  @Composable
+ *  fun DemoPermissionLaunch() {
+ *      val permissionLauncher = rememberPermissionFlowRequestLauncher()
+ *
+ *      Button(onClick = { permissionLauncher.launch(Manifest.permission.CAMERA) }) {
+ *          Text("Launch Camera Permission Request")
+ *      }
+ *  }
+ * ```
+ *
+ * Make sure to use [ManagedActivityResultLauncher.launch] method inside callback or a side effect
+ * and not directly in the compose scope. Otherwise, it'll be invoked across recompositions.
+ *
+ * @param onResult The callback to invoke when the result is received.
+ */
 @Composable
-fun rememberPermissionFlowRequestLauncher(onResult: (Map<String, Boolean>) -> Unit = {}): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
+fun rememberPermissionFlowRequestLauncher(
+    onResult: (Map<String, Boolean>) -> Unit = {}
+): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
     return rememberLauncherForActivityResult(
         contract = RequestPermissionsContract(),
         onResult = onResult
