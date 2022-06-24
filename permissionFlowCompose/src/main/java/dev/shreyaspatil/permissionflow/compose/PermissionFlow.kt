@@ -41,7 +41,7 @@ fun rememberMultiplePermissionState(
 }.collectAsState()
 
 @Composable
-fun rememberPermissionFlowRequestLauncher(onResult: (Map<String, Boolean>) -> Unit): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
+fun rememberPermissionFlowRequestLauncher(onResult: (Map<String, Boolean>) -> Unit = {}): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
     return rememberLauncherForActivityResult(
         contract = RequestPermissionsContract(),
         onResult = onResult

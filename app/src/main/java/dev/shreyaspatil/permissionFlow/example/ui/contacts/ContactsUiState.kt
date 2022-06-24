@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.shreyaspatil.permissionFlow.example.ui
+package dev.shreyaspatil.permissionFlow.example.ui.contacts
 
 import dev.shreyaspatil.permissionFlow.example.data.model.Contact
 
