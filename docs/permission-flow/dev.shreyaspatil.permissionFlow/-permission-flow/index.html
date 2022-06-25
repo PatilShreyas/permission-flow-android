@@ -1,0 +1,138 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>PermissionFlow</title>
+</head><body><link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><link href="../../../styles/prism.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script><script type="text/javascript" src="../../../scripts/main.js" defer></script><script type="text/javascript" src="../../../scripts/prism.js" async></script><script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+
+  
+    <div class="navigation-wrapper" id="navigation-wrapper">
+      <div id="leftToggler"><span class="icon-toggler"></span></div>
+      <div class="library-name"><a href="../../../index.html"><span>PermissionFlow</span></a></div>
+      <div></div>
+      <div class="pull-right d-flex"><button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+      </div>
+    </div>
+    <div id="container">
+      <div id="leftColumn">
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main">
+        <div class="main-content" id="content" pageids="permission-flow::dev.shreyaspatil.permissionFlow/PermissionFlow///PointingToDeclaration//-281958023">
+          <div class="breadcrumbs"><a href="../../index.html">permission-flow</a>/<a href="../index.html">dev.shreyaspatil.permissionFlow</a>/<a href="index.html">PermissionFlow</a></div>
+          <div class="cover ">
+            <h1 class="cover"><span>Permission</span><wbr><span><span>Flow</span></span></h1>
+            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">PermissionFlow</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">A utility class which provides a functionality for observing state of a permission (whether it's granted or not) with reactive coroutine stream i.e. <span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span>.</p><p class="paragraph">This takes care of listening to permission state change from any screen throughout the application so that you can listen to permission in any layer of architecture within app.</p><p class="paragraph">To retrieve the instance, use <a href="-companion/get-instance.html">getInstance</a> method but make sure to initialize it with <a href="-companion/init.html">init</a> method before retrieving instance. Otherwise, it'll throw <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-illegal-state-exception/index.html">IllegalStateException</a></p><p class="paragraph">Example usage:</p><p class="paragraph"><strong>1. Initialization</strong></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class MyApplication: Application() {<br>    override fun onCreate() {<br>        super.onCreate()<br>        PermissionFlow.init(this)<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><strong>2. Observing permission</strong></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">val permissionFlow = PermissionFlow.getInstance()<br><br>fun observeContactsPermission() {<br>    coroutineScope.launch {<br>        permissionFlow.getPermissionState(android.Manifest.permission.READ_CONTACTS)<br>            .collect { state -&gt;<br>                if (state.isGranted) {<br>                    // Do something<br>                }<br>            }<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph"><strong>3. Launching permission</strong></p><div class="sample-container"><pre><code class="block lang-kotlin" theme="idea">class MyActivity: AppCompatActivity() {<br>    private val permissionLauncher = registerForPermissionFlowRequestsResult()<br><br>    fun askContactPermission() {<br>        permissionLauncher.launch(android.Manifest.permission.READ_CONTACTS)<br>    }<br>}</code></pre><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">This utility tries to listen to permission state change which may not happen within a application (<i>e.g. user trying to allow permission from app settings</i>), but doesn't guarantee that you'll always get a updated state at the accurate instant.</p></div></div>
+          </div>
+          <div class="tabbedcontent">
+            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Types">Types</button><button class="section-tab" data-togglable="Functions">Functions</button></div>
+            <div class="tabs-section-body">
+              <h2 class="">Types</h2>
+              <div class="table" data-togglable="Types"><a data-name="692808790%2FClasslikes%2F-281958023" anchor-label="Companion" id="692808790%2FClasslikes%2F-281958023" data-filterable-set=":permission-flow:dokkaHtmlPartial/release"></a>
+                <div class="table-row" data-filterable-current=":permission-flow:dokkaHtmlPartial/release" data-filterable-set=":permission-flow:dokkaHtmlPartial/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex">
+                        <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="692808790%2FClasslikes%2F-281958023"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Companion of <a href="index.html">PermissionFlow</a> to provide initialization of <a href="index.html">PermissionFlow</a> as well as getting instance.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Functions</h2>
+              <div class="table" data-togglable="Functions"><a data-name="196851749%2FFunctions%2F-281958023" anchor-label="getMultiplePermissionState" id="196851749%2FFunctions%2F-281958023" data-filterable-set=":permission-flow:dokkaHtmlPartial/release"></a>
+                <div class="table-row" data-filterable-current=":permission-flow:dokkaHtmlPartial/release" data-filterable-set=":permission-flow:dokkaHtmlPartial/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex">
+                        <div><a href="get-multiple-permission-state.html"><span>get</span><wbr><span>Multiple</span><wbr><span>Permission</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="196851749%2FFunctions%2F-281958023"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-multiple-permission-state.html"><span class="token function">getMultiplePermissionState</span></a><span class="token punctuation">(</span><span class="token keyword">vararg </span>permissions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-multiple-permission-state/index.html">MultiplePermissionState</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns <span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span> of a combining state for <a href="get-multiple-permission-state.html">permissions</a></p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1108711675%2FFunctions%2F-281958023" anchor-label="getPermissionState" id="-1108711675%2FFunctions%2F-281958023" data-filterable-set=":permission-flow:dokkaHtmlPartial/release"></a>
+                <div class="table-row" data-filterable-current=":permission-flow:dokkaHtmlPartial/release" data-filterable-set=":permission-flow:dokkaHtmlPartial/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex">
+                        <div><a href="get-permission-state.html"><span>get</span><wbr><span>Permission</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1108711675%2FFunctions%2F-281958023"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-permission-state.html"><span class="token function">getPermissionState</span></a><span class="token punctuation">(</span>permission<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-permission-state/index.html">PermissionState</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns <span data-unresolved-link="kotlinx.coroutines.flow/StateFlow///PointingToDeclaration/">StateFlow</span> for a given <a href="get-permission-state.html">permission</a></p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1550750398%2FFunctions%2F-281958023" anchor-label="notifyPermissionsChanged" id="-1550750398%2FFunctions%2F-281958023" data-filterable-set=":permission-flow:dokkaHtmlPartial/release"></a>
+                <div class="table-row" data-filterable-current=":permission-flow:dokkaHtmlPartial/release" data-filterable-set=":permission-flow:dokkaHtmlPartial/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex">
+                        <div><a href="notify-permissions-changed.html"><span>notify</span><wbr><span>Permissions</span><wbr><span><span>Changed</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1550750398%2FFunctions%2F-281958023"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="notify-permissions-changed.html"><span class="token function">notifyPermissionsChanged</span></a><span class="token punctuation">(</span><span class="token keyword">vararg </span>permissions<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">This helps to check if specified <a href="notify-permissions-changed.html">permissions</a> are changed and it verifies it and updates the state of permissions which are being observed via <a href="get-multiple-permission-state.html">getMultiplePermissionState</a> method.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-555028654%2FFunctions%2F-281958023" anchor-label="startListening" id="-555028654%2FFunctions%2F-281958023" data-filterable-set=":permission-flow:dokkaHtmlPartial/release"></a>
+                <div class="table-row" data-filterable-current=":permission-flow:dokkaHtmlPartial/release" data-filterable-set=":permission-flow:dokkaHtmlPartial/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex">
+                        <div><a href="start-listening.html"><span>start</span><wbr><span><span>Listening</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-555028654%2FFunctions%2F-281958023"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="start-listening.html"><span class="token function">startListening</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Starts listening the changes of state of permissions.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1827372374%2FFunctions%2F-281958023" anchor-label="stopListening" id="1827372374%2FFunctions%2F-281958023" data-filterable-set=":permission-flow:dokkaHtmlPartial/release"></a>
+                <div class="table-row" data-filterable-current=":permission-flow:dokkaHtmlPartial/release" data-filterable-set=":permission-flow:dokkaHtmlPartial/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex">
+                        <div><a href="stop-listening.html"><span>stop</span><wbr><span><span>Listening</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1827372374%2FFunctions%2F-281958023"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":permission-flow:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="stop-listening.html"><span class="token function">stopListening</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Stops listening to the state changes of permissions throughout the application. This means the state of permission retrieved with <a href="get-multiple-permission-state.html">getMultiplePermissionState</a> method will not be updated after stopping listening. To start to listen again, use <a href="start-listening.html">startListening</a> method.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  
+</body></html>
+
+
