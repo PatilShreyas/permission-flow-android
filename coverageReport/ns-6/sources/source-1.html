@@ -415,101 +415,101 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">42</i>&nbsp;/**
 <i class="no-highlight">43</i>&nbsp; * A watchmen which keeps watching state changes of permissions and events of permissions.
 <i class="no-highlight">44</i>&nbsp; */
-<b class="fc"><i class="no-highlight">45</i>&nbsp;@OptIn(FlowPreview::class)</b>
-<i class="no-highlight">46</i>&nbsp;@Suppress(&quot;OPT_IN_IS_NOT_ENABLED&quot;, &quot;unused&quot;)
-<i class="no-highlight">47</i>&nbsp;internal class PermissionWatchmen(
-<b class="fc"><i class="no-highlight">48</i>&nbsp;    private val application: Application,</b>
-<i class="no-highlight">49</i>&nbsp;    dispatcher: CoroutineDispatcher
-<i class="no-highlight">50</i>&nbsp;) {
-<b class="fc"><i class="no-highlight">51</i>&nbsp;    private val watchmenScope = CoroutineScope(</b>
-<b class="fc"><i class="no-highlight">52</i>&nbsp;        dispatcher +</b>
-<b class="fc"><i class="no-highlight">53</i>&nbsp;            SupervisorJob() +</b>
-<b class="fc"><i class="no-highlight">54</i>&nbsp;            CoroutineName(&quot;PermissionWatchmen&quot;)</b>
-<i class="no-highlight">55</i>&nbsp;    )
-<i class="no-highlight">56</i>&nbsp;
-<i class="no-highlight">57</i>&nbsp;    private var watchEventsJob: Job? = null
-<i class="no-highlight">58</i>&nbsp;    private var watchActivityEventJob: Job? = null
-<i class="no-highlight">59</i>&nbsp;
-<i class="no-highlight">60</i>&nbsp;    /**
-<i class="no-highlight">61</i>&nbsp;     * A in-memory store for storing permission and its state holder i.e. [StateFlow]
-<i class="no-highlight">62</i>&nbsp;     */
-<b class="fc"><i class="no-highlight">63</i>&nbsp;    private val permissionFlows = mutableMapOf&lt;String, PermissionStateFlowDelegate&gt;()</b>
-<i class="no-highlight">64</i>&nbsp;
-<b class="fc"><i class="no-highlight">65</i>&nbsp;    private val permissionEvents = MutableSharedFlow&lt;PermissionEvent&gt;()</b>
-<i class="no-highlight">66</i>&nbsp;
-<i class="no-highlight">67</i>&nbsp;    fun watch(permission: String): StateFlow&lt;PermissionState&gt; {
-<i class="no-highlight">68</i>&nbsp;        // Wakeup watchmen if sleeping
-<b class="fc"><i class="no-highlight">69</i>&nbsp;        wakeUp()</b>
-<b class="fc"><i class="no-highlight">70</i>&nbsp;        return getOrCreatePermissionStateFlow(permission)</b>
-<i class="no-highlight">71</i>&nbsp;    }
-<i class="no-highlight">72</i>&nbsp;
-<i class="no-highlight">73</i>&nbsp;    fun watchMultiple(permissions: Array&lt;String&gt;): StateFlow&lt;MultiplePermissionState&gt; {
-<i class="no-highlight">74</i>&nbsp;        // Wakeup watchmen if sleeping
-<b class="fc"><i class="no-highlight">75</i>&nbsp;        wakeUp()</b>
-<i class="no-highlight">76</i>&nbsp;
-<b class="fc"><i class="no-highlight">77</i>&nbsp;        val permissionStates = permissions</b>
-<b class="fc"><i class="no-highlight">78</i>&nbsp;            .distinct()</b>
-<b class="fc"><i class="no-highlight">79</i>&nbsp;            .map { getOrCreatePermissionStateFlow(it) }</b>
-<b class="fc"><i class="no-highlight">80</i>&nbsp;            .toTypedArray()</b>
-<i class="no-highlight">81</i>&nbsp;
-<b class="fc"><i class="no-highlight">82</i>&nbsp;        return combineStates(*permissionStates) { MultiplePermissionState(it.toList()) }</b>
-<i class="no-highlight">83</i>&nbsp;    }
-<i class="no-highlight">84</i>&nbsp;
-<i class="no-highlight">85</i>&nbsp;    fun notifyPermissionsChanged(permissions: Array&lt;String&gt;) {
-<b class="fc"><i class="no-highlight">86</i>&nbsp;        watchmenScope.launch {</b>
-<b class="fc"><i class="no-highlight">87</i>&nbsp;            permissions.forEach { permission -&gt;</b>
-<b class="fc"><i class="no-highlight">88</i>&nbsp;                permissionEvents.emit(</b>
-<b class="fc"><i class="no-highlight">89</i>&nbsp;                    PermissionEvent(</b>
-<b class="fc"><i class="no-highlight">90</i>&nbsp;                        permission = permission,</b>
-<b class="fc"><i class="no-highlight">91</i>&nbsp;                        isGranted = isPermissionGranted(permission)</b>
-<i class="no-highlight">92</i>&nbsp;                    )
-<i class="no-highlight">93</i>&nbsp;                )
-<b class="fc"><i class="no-highlight">94</i>&nbsp;            }</b>
-<i class="no-highlight">95</i>&nbsp;        }
-<i class="no-highlight">96</i>&nbsp;    }
-<i class="no-highlight">97</i>&nbsp;
-<i class="no-highlight">98</i>&nbsp;    @Synchronized
-<i class="no-highlight">99</i>&nbsp;    fun wakeUp() {
-<b class="fc"><i class="no-highlight">100</i>&nbsp;        watchPermissionEvents()</b>
-<b class="fc"><i class="no-highlight">101</i>&nbsp;        watchActivities()</b>
-<b class="fc"><i class="no-highlight">102</i>&nbsp;        notifyAllPermissionsChanged()</b>
-<i class="no-highlight">103</i>&nbsp;    }
-<i class="no-highlight">104</i>&nbsp;
-<i class="no-highlight">105</i>&nbsp;    @Synchronized
-<i class="no-highlight">106</i>&nbsp;    fun sleep() {
-<b class="fc"><i class="no-highlight">107</i>&nbsp;        watchmenScope.coroutineContext.cancelChildren()</b>
-<i class="no-highlight">108</i>&nbsp;    }
-<i class="no-highlight">109</i>&nbsp;
-<i class="no-highlight">110</i>&nbsp;    /**
-<i class="no-highlight">111</i>&nbsp;     * First finds for existing flow (if available) otherwise creates a new [MutableStateFlow]
-<i class="no-highlight">112</i>&nbsp;     * for [permission] and returns a read-only [StateFlow] for a [permission].
-<i class="no-highlight">113</i>&nbsp;     */
-<i class="no-highlight">114</i>&nbsp;    @Synchronized
-<i class="no-highlight">115</i>&nbsp;    private fun getOrCreatePermissionStateFlow(permission: String): StateFlow&lt;PermissionState&gt; {
-<b class="fc"><i class="no-highlight">116</i>&nbsp;        val delegate = permissionFlows[permission] ?: run {</b>
-<b class="fc"><i class="no-highlight">117</i>&nbsp;            val initialState = PermissionState(permission, isPermissionGranted(permission))</b>
-<b class="fc"><i class="no-highlight">118</i>&nbsp;            PermissionStateFlowDelegate(initialState).also { permissionFlows[permission] = it }</b>
-<i class="no-highlight">119</i>&nbsp;        }
-<b class="fc"><i class="no-highlight">120</i>&nbsp;        return delegate.state</b>
-<i class="no-highlight">121</i>&nbsp;    }
-<i class="no-highlight">122</i>&nbsp;
-<i class="no-highlight">123</i>&nbsp;    /**
-<i class="no-highlight">124</i>&nbsp;     * Watches for the permission events and updates appropriate state holders of permission
-<i class="no-highlight">125</i>&nbsp;     */
-<i class="no-highlight">126</i>&nbsp;    private fun watchPermissionEvents() {
-<b class="pc"><i class="no-highlight">127</i>&nbsp;        if (watchEventsJob != null &amp;&amp; watchEventsJob?.isActive == true) return</b>
-<b class="fc"><i class="no-highlight">128</i>&nbsp;        watchEventsJob = watchmenScope.launch {</b>
-<b class="fc"><i class="no-highlight">129</i>&nbsp;            permissionEvents.collect { (permission, isGranted) -&gt;</b>
-<b class="pc"><i class="no-highlight">130</i>&nbsp;                permissionFlows[permission]?.setState(PermissionState(permission, isGranted))</b>
-<i class="no-highlight">131</i>&nbsp;            }
-<i class="no-highlight">132</i>&nbsp;        }
-<i class="no-highlight">133</i>&nbsp;    }
-<i class="no-highlight">134</i>&nbsp;
-<i class="no-highlight">135</i>&nbsp;    /**
-<i class="no-highlight">136</i>&nbsp;     * Watches for activity foreground events (to detect whether user has changed permission by
-<i class="no-highlight">137</i>&nbsp;     * going in settings) and recalculates state of the permissions which are currently being
-<i class="no-highlight">138</i>&nbsp;     * observed.
-<i class="no-highlight">139</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">45</i>&nbsp;@Suppress(&quot;OPT_IN_IS_NOT_ENABLED&quot;, &quot;unused&quot;)</b>
+<i class="no-highlight">46</i>&nbsp;internal class PermissionWatchmen(
+<b class="fc"><i class="no-highlight">47</i>&nbsp;    private val application: Application,</b>
+<i class="no-highlight">48</i>&nbsp;    dispatcher: CoroutineDispatcher
+<i class="no-highlight">49</i>&nbsp;) {
+<b class="fc"><i class="no-highlight">50</i>&nbsp;    private val watchmenScope = CoroutineScope(</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;        dispatcher +</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;            SupervisorJob() +</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;            CoroutineName(&quot;PermissionWatchmen&quot;)</b>
+<i class="no-highlight">54</i>&nbsp;    )
+<i class="no-highlight">55</i>&nbsp;
+<i class="no-highlight">56</i>&nbsp;    private var watchEventsJob: Job? = null
+<i class="no-highlight">57</i>&nbsp;    private var watchActivityEventJob: Job? = null
+<i class="no-highlight">58</i>&nbsp;
+<i class="no-highlight">59</i>&nbsp;    /**
+<i class="no-highlight">60</i>&nbsp;     * A in-memory store for storing permission and its state holder i.e. [StateFlow]
+<i class="no-highlight">61</i>&nbsp;     */
+<b class="fc"><i class="no-highlight">62</i>&nbsp;    private val permissionFlows = mutableMapOf&lt;String, PermissionStateFlowDelegate&gt;()</b>
+<i class="no-highlight">63</i>&nbsp;
+<b class="fc"><i class="no-highlight">64</i>&nbsp;    private val permissionEvents = MutableSharedFlow&lt;PermissionEvent&gt;()</b>
+<i class="no-highlight">65</i>&nbsp;
+<i class="no-highlight">66</i>&nbsp;    fun watch(permission: String): StateFlow&lt;PermissionState&gt; {
+<i class="no-highlight">67</i>&nbsp;        // Wakeup watchmen if sleeping
+<b class="fc"><i class="no-highlight">68</i>&nbsp;        wakeUp()</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;        return getOrCreatePermissionStateFlow(permission)</b>
+<i class="no-highlight">70</i>&nbsp;    }
+<i class="no-highlight">71</i>&nbsp;
+<i class="no-highlight">72</i>&nbsp;    fun watchMultiple(permissions: Array&lt;String&gt;): StateFlow&lt;MultiplePermissionState&gt; {
+<i class="no-highlight">73</i>&nbsp;        // Wakeup watchmen if sleeping
+<b class="fc"><i class="no-highlight">74</i>&nbsp;        wakeUp()</b>
+<i class="no-highlight">75</i>&nbsp;
+<b class="fc"><i class="no-highlight">76</i>&nbsp;        val permissionStates = permissions</b>
+<b class="fc"><i class="no-highlight">77</i>&nbsp;            .distinct()</b>
+<b class="fc"><i class="no-highlight">78</i>&nbsp;            .map { getOrCreatePermissionStateFlow(it) }</b>
+<b class="fc"><i class="no-highlight">79</i>&nbsp;            .toTypedArray()</b>
+<i class="no-highlight">80</i>&nbsp;
+<b class="fc"><i class="no-highlight">81</i>&nbsp;        return combineStates(*permissionStates) { MultiplePermissionState(it.toList()) }</b>
+<i class="no-highlight">82</i>&nbsp;    }
+<i class="no-highlight">83</i>&nbsp;
+<i class="no-highlight">84</i>&nbsp;    fun notifyPermissionsChanged(permissions: Array&lt;String&gt;) {
+<b class="fc"><i class="no-highlight">85</i>&nbsp;        watchmenScope.launch {</b>
+<b class="fc"><i class="no-highlight">86</i>&nbsp;            permissions.forEach { permission -&gt;</b>
+<b class="fc"><i class="no-highlight">87</i>&nbsp;                permissionEvents.emit(</b>
+<b class="fc"><i class="no-highlight">88</i>&nbsp;                    PermissionEvent(</b>
+<b class="fc"><i class="no-highlight">89</i>&nbsp;                        permission = permission,</b>
+<b class="fc"><i class="no-highlight">90</i>&nbsp;                        isGranted = isPermissionGranted(permission)</b>
+<i class="no-highlight">91</i>&nbsp;                    )
+<i class="no-highlight">92</i>&nbsp;                )
+<b class="fc"><i class="no-highlight">93</i>&nbsp;            }</b>
+<i class="no-highlight">94</i>&nbsp;        }
+<i class="no-highlight">95</i>&nbsp;    }
+<i class="no-highlight">96</i>&nbsp;
+<i class="no-highlight">97</i>&nbsp;    @Synchronized
+<i class="no-highlight">98</i>&nbsp;    fun wakeUp() {
+<b class="fc"><i class="no-highlight">99</i>&nbsp;        watchPermissionEvents()</b>
+<b class="fc"><i class="no-highlight">100</i>&nbsp;        watchActivities()</b>
+<b class="fc"><i class="no-highlight">101</i>&nbsp;        notifyAllPermissionsChanged()</b>
+<i class="no-highlight">102</i>&nbsp;    }
+<i class="no-highlight">103</i>&nbsp;
+<i class="no-highlight">104</i>&nbsp;    @Synchronized
+<i class="no-highlight">105</i>&nbsp;    fun sleep() {
+<b class="fc"><i class="no-highlight">106</i>&nbsp;        watchmenScope.coroutineContext.cancelChildren()</b>
+<i class="no-highlight">107</i>&nbsp;    }
+<i class="no-highlight">108</i>&nbsp;
+<i class="no-highlight">109</i>&nbsp;    /**
+<i class="no-highlight">110</i>&nbsp;     * First finds for existing flow (if available) otherwise creates a new [MutableStateFlow]
+<i class="no-highlight">111</i>&nbsp;     * for [permission] and returns a read-only [StateFlow] for a [permission].
+<i class="no-highlight">112</i>&nbsp;     */
+<i class="no-highlight">113</i>&nbsp;    @Synchronized
+<i class="no-highlight">114</i>&nbsp;    private fun getOrCreatePermissionStateFlow(permission: String): StateFlow&lt;PermissionState&gt; {
+<b class="fc"><i class="no-highlight">115</i>&nbsp;        val delegate = permissionFlows[permission] ?: run {</b>
+<b class="fc"><i class="no-highlight">116</i>&nbsp;            val initialState = PermissionState(permission, isPermissionGranted(permission))</b>
+<b class="fc"><i class="no-highlight">117</i>&nbsp;            PermissionStateFlowDelegate(initialState).also { permissionFlows[permission] = it }</b>
+<i class="no-highlight">118</i>&nbsp;        }
+<b class="fc"><i class="no-highlight">119</i>&nbsp;        return delegate.state</b>
+<i class="no-highlight">120</i>&nbsp;    }
+<i class="no-highlight">121</i>&nbsp;
+<i class="no-highlight">122</i>&nbsp;    /**
+<i class="no-highlight">123</i>&nbsp;     * Watches for the permission events and updates appropriate state holders of permission
+<i class="no-highlight">124</i>&nbsp;     */
+<i class="no-highlight">125</i>&nbsp;    private fun watchPermissionEvents() {
+<b class="pc"><i class="no-highlight">126</i>&nbsp;        if (watchEventsJob != null &amp;&amp; watchEventsJob?.isActive == true) return</b>
+<b class="fc"><i class="no-highlight">127</i>&nbsp;        watchEventsJob = watchmenScope.launch {</b>
+<b class="fc"><i class="no-highlight">128</i>&nbsp;            permissionEvents.collect { (permission, isGranted) -&gt;</b>
+<b class="pc"><i class="no-highlight">129</i>&nbsp;                permissionFlows[permission]?.setState(PermissionState(permission, isGranted))</b>
+<i class="no-highlight">130</i>&nbsp;            }
+<i class="no-highlight">131</i>&nbsp;        }
+<i class="no-highlight">132</i>&nbsp;    }
+<i class="no-highlight">133</i>&nbsp;
+<i class="no-highlight">134</i>&nbsp;    /**
+<i class="no-highlight">135</i>&nbsp;     * Watches for activity foreground events (to detect whether user has changed permission by
+<i class="no-highlight">136</i>&nbsp;     * going in settings) and recalculates state of the permissions which are currently being
+<i class="no-highlight">137</i>&nbsp;     * observed.
+<i class="no-highlight">138</i>&nbsp;     */
+<i class="no-highlight">139</i>&nbsp;    @OptIn(FlowPreview::class)
 <i class="no-highlight">140</i>&nbsp;    private fun watchActivities() {
 <b class="pc"><i class="no-highlight">141</i>&nbsp;        if (watchActivityEventJob != null &amp;&amp; watchActivityEventJob?.isActive == true) return</b>
 <b class="fc"><i class="no-highlight">142</i>&nbsp;        watchActivityEventJob = application.activityForegroundEventFlow</b>
@@ -549,7 +549,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">176</i>&nbsp;     */
 <b class="fc"><i class="no-highlight">177</i>&nbsp;    private class PermissionStateFlowDelegate(initialState: PermissionState) {</b>
 <i class="no-highlight">178</i>&nbsp;
-<b class="fc"><i class="no-highlight">179</i>&nbsp;        private val _state = MutableStateFlow&lt;PermissionState&gt;(initialState)</b>
+<b class="fc"><i class="no-highlight">179</i>&nbsp;        private val _state = MutableStateFlow(initialState)</b>
 <b class="fc"><i class="no-highlight">180</i>&nbsp;        val state = _state.asStateFlow()</b>
 <i class="no-highlight">181</i>&nbsp;
 <i class="no-highlight">182</i>&nbsp;        fun setState(newState: PermissionState) {
@@ -587,7 +587,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2022-06-25 16:36</div>
+    <div style="float:right;">generated on 2022-06-25 16:44</div>
 </div>
 </body>
 </html>
