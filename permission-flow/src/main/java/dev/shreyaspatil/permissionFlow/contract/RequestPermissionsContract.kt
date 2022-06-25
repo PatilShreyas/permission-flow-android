@@ -27,7 +27,7 @@ import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsRe
 
 /**
  * An [ActivityResultContract] which delegates request and response to
- * [ActivityResultContracts.RequestMultiplePermissions] and silently notifier [PermissionFlow]
+ * [ActivityResultContracts.RequestMultiplePermissions] and silently notifies [PermissionFlow]
  * regarding state change of a permissions which are requested through [ActivityResultLauncher].
  *
  * Refer to [ComponentActivity.registerForPermissionFlowRequestsResult] for actual usage.
