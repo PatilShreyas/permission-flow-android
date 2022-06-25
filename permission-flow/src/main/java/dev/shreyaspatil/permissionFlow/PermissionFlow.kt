@@ -175,6 +175,10 @@ interface PermissionFlow {
      */
     fun stopListening()
 
+    /**
+     * Companion of [PermissionFlow] to provide initialization of [PermissionFlow] as well as
+     * getting instance.
+     */
     companion object {
         private val DEFAULT_DISPATCHER = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
 
@@ -186,6 +190,7 @@ interface PermissionFlow {
          * it utilizes dispatcher having fixed two number of threads.
          */
         @JvmStatic
+        @JvmOverloads
         fun init(context: Context, dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER) {
             PermissionFlowImpl.init(context, dispatcher)
         }
