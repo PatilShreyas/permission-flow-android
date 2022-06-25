@@ -67,12 +67,3 @@ tasks.koverHtmlReport {
     htmlReportDir.set(layout.buildDirectory.dir("coverageReport/html"))
 }
 
-dokkaHtml.configure {
-    outputDirectory.set(rootProject.mkdir("docs"))
-
-    dokkaSourceSets {
-        named("main") {
-            noAndroidSdkLink.set(false)
-        }
-    }
-}
