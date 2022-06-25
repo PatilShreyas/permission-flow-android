@@ -49,5 +49,5 @@ task clean(type: Delete) {
 apply plugin: 'org.jetbrains.dokka'
 
 tasks.dokkaHtmlMultiModule.configure {
-    outputDirectory.set(project.mkdir("docs"))
+    outputDirectory.set(project.mkdir("build/docs"))
 }
