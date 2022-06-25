@@ -27,7 +27,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: build
+          arguments: build dokkaHtmlMultiModule koverHtmlReport
 
       - name: Publish Library
         run: |
@@ -65,3 +65,15 @@ jobs:
           release_name: v${{ github.event.inputs.versionName }}
           draft: true
           prerelease: false
+          
+      - name: Gather API Documentation and Coverage Report
+        run: |
+          mkdir gh-pages
+          mv build/docs gh-pages/docs
+          mv permission-flow/build/coverageReport/html gh-pages/coverageReport
+          
+      - name: Publish Documentation and Coverage Report
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages 
+          folder: gh-pages
