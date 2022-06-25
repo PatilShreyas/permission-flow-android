@@ -45,7 +45,7 @@ android {
 }
 
 dependencies {
-    api project(":permissionFlow")
+    api project(":permission-flow")
 
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.activity:activity-compose:$activityVersion"

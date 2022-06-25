@@ -48,8 +48,8 @@ android {
 
 dependencies {
     // Library
-    implementation(project(":permissionFlow"))
-    implementation(project(":permissionFlowCompose"))
+    implementation(project(":permission-flow"))
+    implementation(project(":permission-flow-compose"))
 
     // Android
     implementation 'androidx.core:core-ktx:1.8.0'
