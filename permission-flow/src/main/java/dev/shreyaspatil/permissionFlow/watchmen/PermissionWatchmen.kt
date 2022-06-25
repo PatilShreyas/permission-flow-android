@@ -42,7 +42,6 @@ import kotlinx.coroutines.yield
 /**
  * A watchmen which keeps watching state changes of permissions and events of permissions.
  */
-@OptIn(FlowPreview::class)
 @Suppress("OPT_IN_IS_NOT_ENABLED", "unused")
 internal class PermissionWatchmen(
     private val application: Application,
@@ -137,6 +136,7 @@ internal class PermissionWatchmen(
      * going in settings) and recalculates state of the permissions which are currently being
      * observed.
      */
+    @OptIn(FlowPreview::class)
     private fun watchActivities() {
         if (watchActivityEventJob != null && watchActivityEventJob?.isActive == true) return
         watchActivityEventJob = application.activityForegroundEventFlow
@@ -176,7 +176,7 @@ internal class PermissionWatchmen(
      */
     private class PermissionStateFlowDelegate(initialState: PermissionState) {
 
-        private val _state = MutableStateFlow<PermissionState>(initialState)
+        private val _state = MutableStateFlow(initialState)
         val state = _state.asStateFlow()
 
         fun setState(newState: PermissionState) {
