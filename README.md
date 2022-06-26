@@ -169,7 +169,7 @@ fun Example() {
 }
 ```
 
-### ⚠️ Manually notifying permission state changes
+### 5. Manually notifying permission state changes ⚠️
 
 If you're not using `ActivityResultLauncher` APIs provided by this library then 
 you will ***not receive permission state change updates***. But there's a provision by which 
