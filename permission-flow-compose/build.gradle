@@ -58,8 +58,6 @@ dependencies {
 }
 
 dokkaHtml.configure {
-    outputDirectory.set(rootProject.mkdir("docs"))
-
     dokkaSourceSets {
         named("main") {
             noAndroidSdkLink.set(false)
