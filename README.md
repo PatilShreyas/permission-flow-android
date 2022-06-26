@@ -190,6 +190,23 @@ class MyActivity: AppCompatActivity() {
 }
 ```
 
+### 6. Manually Start / Stop Listening ⚠️
+
+This library starts processing things lazily whenever `getPermissionState()` or `getMultiplePermissionState()` is called
+for the first time. But this can be controlled with these methods:
+
+```kotlin
+fun doSomething() {
+    // Stops listening to the state changes of permissions throughout the application.
+    // This means the state of permission retrieved with [getMultiplePermissionState] method will not 
+    // be updated after stopping listening. 
+    permissionFlow.stopListening()
+    
+    // Starts listening the changes of state of permissions after stopping listening
+    permissionFlow.startListening()
+}
+```
+
 ## 📄 API Documentation
 
 [Visit the API documentation](https://patilshreyas.github.io/permission-flow-android/docs/) of this library to get more information in detail. This documentation is 
