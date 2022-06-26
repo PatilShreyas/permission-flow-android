@@ -35,11 +35,10 @@ In `build.gradle` of app module, include this dependency
 
 ```gradle
 dependencies {
-    def permissionFlowVersion = "1.0.0"
-    implementation "dev.shreyaspatil:permission-flow:permission-flow-android:$permissionFlowVersion"
+    implementation "dev.shreyaspatil:permission-flow:permission-flow-android:$version"
     
     // For using in Jetpack Compose
-    implementation "dev.shreyaspatil:permission-flow:permission-flow-compose:$permissionFlowVersion"
+    implementation "dev.shreyaspatil:permission-flow:permission-flow-compose:$version"
 }
 ```
 
