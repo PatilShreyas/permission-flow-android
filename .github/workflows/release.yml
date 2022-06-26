@@ -69,6 +69,7 @@ jobs:
       - name: Gather API Documentation and Coverage Report
         run: |
           mkdir gh-pages
+          mv README.md gh-pages/README.md
           mv build/docs gh-pages/docs
           mv permission-flow/build/coverageReport/html gh-pages/coverageReport
           
