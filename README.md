@@ -5,8 +5,12 @@ Android Developers_.
 
 [![Build](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/build.yml/badge.svg)](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/build.yml)
 [![Release](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/release.yml/badge.svg)](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/release.yml)
+[![codecov](https://codecov.io/gh/PatilShreyas/permission-flow-android/branch/main/graph/badge.svg?token=6TOHNLQDVW)](https://codecov.io/gh/PatilShreyas/permission-flow-android)
 [![Maven Central](https://img.shields.io/maven-central/v/dev.shreyaspatil.permission-flow/permission-flow-android?label=Maven%20Central&logo=android&style=flat-square)](https://search.maven.org/artifact/dev.shreyaspatil.permission-flow/permission-flow-android)
 [![GitHub](https://img.shields.io/github/license/PatilShreyas/permission-flow-android?label=License)](LICENSE)
+
+[![dokka](https://img.shields.io/badge/Dokka-Docs-blueviolet.svg?style=flat&logo=kotlin)](https://patilshreyas.github.io/permission-flow-android/docs/)
+[![kover](https://img.shields.io/badge/Kover-Coverage-blueviolet.svg?style=flat&logo=kotlin)](https://patilshreyas.github.io/permission-flow-android/coverageReport/)
 
 [![Github Followers](https://img.shields.io/github/followers/PatilShreyas?label=Follow&style=social)](https://github.com/PatilShreyas)
 [![GitHub stars](https://img.shields.io/github/stars/PatilShreyas/permission-flow-android?style=social)](https://github.com/PatilShreyas/permission-flow-android/stargazers)
@@ -209,12 +213,11 @@ fun doSomething() {
 
 ## 📄 API Documentation
 
-[Visit the API documentation](https://patilshreyas.github.io/permission-flow-android/docs/) of this library to get more information in detail. This documentation is 
-generated using Dokka.
+[Visit the API documentation](https://patilshreyas.github.io/permission-flow-android/docs/) of this library to get more information in detail. This documentation is generated using [Dokka](https://github.com/Kotlin/dokka).
 
 ## 📊 Test coverage report
 
-[Check the Test Coverage Report](https://patilshreyas.github.io/permission-flow-android/coverageReport/) of this library.
+[Check the Test Coverage Report](https://patilshreyas.github.io/permission-flow-android/coverageReport/) of this library. This is generated using [Kover](https://github.com/Kotlin/kotlinx-kover).
 
 ---
 
