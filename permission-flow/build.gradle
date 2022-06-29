@@ -67,6 +67,11 @@ tasks.koverHtmlReport {
     htmlReportDir.set(layout.buildDirectory.dir("coverageReport/html"))
 }
 
+tasks.koverXmlReport {
+    enabled = true
+    xmlReportFile.set(layout.buildDirectory.file("coverageReport/report.xml"))
+}
+
 dokkaHtml.configure {
     dokkaSourceSets {
         named("main") {
