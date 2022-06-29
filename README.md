@@ -40,10 +40,10 @@ In `build.gradle` of app module, include this dependency
 
 ```gradle
 dependencies {
-    implementation "dev.shreyaspatil:permission-flow:permission-flow-android:$version"
+    implementation "dev.shreyaspatil.permission-flow:permission-flow-android:$version"
     
     // For using in Jetpack Compose
-    implementation "dev.shreyaspatil:permission-flow:permission-flow-compose:$version"
+    implementation "dev.shreyaspatil.permission-flow:permission-flow-compose:$version"
 }
 ```
 
