@@ -13,19 +13,20 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-
-      - name: Cache Gradle and wrapper
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
+          
       - name: Grant Permission to Execute
         run: chmod +x gradlew
-
-      - name: Build with Gradle 🛠️
-        run: ./gradlew build --stacktrace
+        
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build koverXmlReport --stacktrace
+        
+      - name: Upload Coverage report to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: permission-flow/build/coverageReport/report.xml
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
