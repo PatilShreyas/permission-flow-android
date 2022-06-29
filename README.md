@@ -5,6 +5,7 @@ Android Developers_.
 
 [![Build](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/build.yml/badge.svg)](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/build.yml)
 [![Release](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/release.yml/badge.svg)](https://github.com/PatilShreyas/permission-flow-android/actions/workflows/release.yml)
+[![codecov](https://codecov.io/gh/PatilShreyas/permission-flow-android/branch/main/graph/badge.svg?token=6TOHNLQDVW)](https://codecov.io/gh/PatilShreyas/permission-flow-android)
 [![Maven Central](https://img.shields.io/maven-central/v/dev.shreyaspatil.permission-flow/permission-flow-android?label=Maven%20Central&logo=android&style=flat-square)](https://search.maven.org/artifact/dev.shreyaspatil.permission-flow/permission-flow-android)
 [![GitHub](https://img.shields.io/github/license/PatilShreyas/permission-flow-android?label=License)](LICENSE)
 
