@@ -29,3 +29,11 @@ jobs:
 
       - name: Build with Gradle 🛠️
         run: ./gradlew build --stacktrace
+        
+      - name: Upload Coverage report to CodeCov
+        uses: codecov/codecov-action@v2
+        with:
+          files: permission-flow/build/coverageReport/report.xml
+          flags: unittests
+          fail_ci_if_error: true
+          verbose: true
