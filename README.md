@@ -209,12 +209,11 @@ fun doSomething() {
 
 ## 📄 API Documentation
 
-[Visit the API documentation](https://patilshreyas.github.io/permission-flow-android/docs/) of this library to get more information in detail. This documentation is 
-generated using Dokka.
+[Visit the API documentation](https://patilshreyas.github.io/permission-flow-android/docs/) of this library to get more information in detail. This documentation is generated using [Dokka](https://github.com/Kotlin/dokka).
 
 ## 📊 Test coverage report
 
-[Check the Test Coverage Report](https://patilshreyas.github.io/permission-flow-android/coverageReport/) of this library.
+[Check the Test Coverage Report](https://patilshreyas.github.io/permission-flow-android/coverageReport/) of this library. This is generated using [Kover](https://github.com/Kotlin/kotlinx-kover).
 
 ---
 
