@@ -13,7 +13,7 @@ buildscript {
         turbineVersion = '0.8.0'
         spotlessVersion = '6.9.0'
         mavenPublishVersion = '0.20.0'
-        ktlintVersion = '0.45.2'
+        ktlintVersion = '0.46.0'
         koverVersion = "0.5.1"
     }
 }
