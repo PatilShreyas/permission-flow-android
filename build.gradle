@@ -13,7 +13,6 @@ buildscript {
         turbineVersion = '0.8.0'
         spotlessVersion = '6.9.0'
         mavenPublishVersion = '0.20.0'
-        ktlintVersion = '0.46.0'
         koverVersion = "0.5.1"
     }
 }
@@ -36,7 +35,7 @@ subprojects {
             targetExclude("$buildDir/**/*.kt")
             targetExclude('bin/**/*.kt')
 
-            ktlint(ktlintVersion)
+            ktlint()
             licenseHeaderFile rootProject.file('spotless/copyright.kt')
         }
     }
