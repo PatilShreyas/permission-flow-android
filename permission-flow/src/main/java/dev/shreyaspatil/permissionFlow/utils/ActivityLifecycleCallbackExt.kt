@@ -59,7 +59,7 @@ internal val Application.activityForegroundEventFlow
              * PiP or multi-window mode. So whenever these modes are exited, emit foreground event.
              */
             override fun onActivityResumed(activity: Activity) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                ApiLevelChecker.ifHigherThan(targetVersion = Build.VERSION_CODES.N) {
                     if (isActivityResumedAfterMultiWindowOrPiPMode(activity)) {
                         trySend(Unit)
                     }
@@ -73,7 +73,7 @@ internal val Application.activityForegroundEventFlow
              * callback is triggered.
              */
             override fun onActivityPaused(activity: Activity) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                ApiLevelChecker.ifHigherThan(Build.VERSION_CODES.N) {
                     wasInMultiWindowMode = activity.isInMultiWindowMode
                     wasInPictureInPictureMode = activity.isInPictureInPictureMode
                 }
