@@ -180,7 +180,7 @@ interface PermissionFlow {
      * getting instance.
      */
     companion object {
-        internal val DEFAULT_DISPATCHER = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
+        private val DEFAULT_DISPATCHER = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
 
         /**
          * Initializes this [PermissionFlow] instance with specified arguments.
@@ -189,7 +189,8 @@ interface PermissionFlow {
          * @param dispatcher Coroutine dispatcher to be used in the [PermissionFlow]. By default,
          * it utilizes dispatcher having fixed two number of threads.
          */
-        @Deprecated(message = "We don't need to call `init()` in this version.", level = DeprecationLevel.HIDDEN)
+        @JvmStatic
+        @JvmOverloads
         fun init(context: Context, dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER) {
             PermissionFlowImpl.init(context, dispatcher)
         }

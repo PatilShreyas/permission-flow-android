@@ -17,17 +17,19 @@ package dev.shreyaspatil.permissionFlow.utils
 
 import android.app.Activity
 import android.app.Application
+import android.os.Build
 import app.cash.turbine.test
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import java.lang.reflect.Field
+import java.lang.reflect.Modifier
 
 @Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -80,7 +82,7 @@ class ActivityLifecycleCallbackExtTest {
 
     @Test
     fun shouldEmitEvent_whenActivityIsResumedAfterExitingFromInMultiWindowMode() = runTest {
-        mockAndroidApiHigherThanExpected()
+        mockAndroidApiVersion(25)
         application.activityForegroundEventFlow.test {
             // Before onStart(), onStop() should be called first
             lifecycleCallbacks.onActivityPaused(activity(isInMultiWindowMode = true))
@@ -93,7 +95,7 @@ class ActivityLifecycleCallbackExtTest {
 
     @Test
     fun shouldNotEmitEvent_whenActivityIsResumedButStillInMultiWindowMode() = runTest {
-        mockAndroidApiHigherThanExpected()
+        mockAndroidApiVersion(25)
         application.activityForegroundEventFlow.test {
             // Before onStart(), onStop() should be called first
             lifecycleCallbacks.onActivityPaused(activity(isInMultiWindowMode = true))
@@ -106,7 +108,7 @@ class ActivityLifecycleCallbackExtTest {
 
     @Test
     fun shouldEmitEvent_whenActivityIsResumedAfterExitingFromPiPMode() = runTest {
-        mockAndroidApiHigherThanExpected()
+        mockAndroidApiVersion(25)
         application.activityForegroundEventFlow.test {
             // Before onStart(), onStop() should be called first
             lifecycleCallbacks.onActivityPaused(activity(isInPictureInPictureMode = true))
@@ -119,7 +121,7 @@ class ActivityLifecycleCallbackExtTest {
 
     @Test
     fun shouldNotEmitEvent_whenActivityIsResumedButStillInPiPMode() = runTest {
-        mockAndroidApiHigherThanExpected()
+        mockAndroidApiVersion(25)
         application.activityForegroundEventFlow.test {
             // Before onStart(), onStop() should be called first
             lifecycleCallbacks.onActivityPaused(activity(isInPictureInPictureMode = true))
@@ -145,13 +147,18 @@ class ActivityLifecycleCallbackExtTest {
 
     /**
      * Some functionalities in the utility requires Android OS version above API 24.
-     * This utility function mocks OS version higher than expected version
+     * This utility function reflectively mocks OS version as specified [apiVersion]
      */
-    private fun mockAndroidApiHigherThanExpected() {
-        mockkObject(ApiLevelChecker)
-        val slot = slot<() -> Unit>()
-        every { ApiLevelChecker.ifHigherThan(any(), capture(slot)) } answers {
-            slot.captured.invoke()
+    private fun mockAndroidApiVersion(apiVersion: Int) {
+        Build.VERSION::class.java.getDeclaredField("SDK_INT").apply {
+            isAccessible = true
+
+            val modifiersField =
+                Field::class.java.getDeclaredField("modifiers").apply { isAccessible = true }
+            modifiersField.isAccessible = true
+            modifiersField.setInt(this, modifiers and Modifier.FINAL.inv())
+
+            set(null, apiVersion)
         }
     }
 }

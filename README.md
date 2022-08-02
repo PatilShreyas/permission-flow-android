@@ -49,9 +49,43 @@ dependencies {
 
 _You can find latest version and changelogs in the [releases](https://github.com/PatilShreyas/permission-flow-android/releases)_.
 
-### 2. Observing a Permission State
+### 2. Initialization
 
-#### 2.1 Observing Permission with `StateFlow`
+This library automatically gets initialized with the App Startup library.
+If you want to provide own coroutine dispatcher
+
+#### 2.1 Initialize **PermissionFlow** as follows (For example, in `Application` class)
+
+```kotlin
+class MyApplication: Application() {
+    override fun onCreate() {
+        super.onCreate()
+        val permissionDispatcher = Executors.newFixedThreadPool(3).asCoroutineDispatcher()
+        PermissionFlow.init(this, permissionDispatcher)
+    }
+}
+```
+
+#### 2.2 Disable PermissionFlowInitializer in AndroidManifest.xml
+```xml
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+
+            <meta-data
+                android:name="dev.shreyaspatil.permissionFlow.initializer.PermissionFlowInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
+
+
+```
+
+### 3. Observing a Permission State
+
+#### 3.1 Observing Permission with `StateFlow`
 A permission state can be subscribed by retrieving `StateFlow<PermissionState>` or `StateFlow<MultiplePermissionState>` as follows:
 
 ```kotlin
@@ -87,7 +121,7 @@ suspend fun observeMultiplePermissions() {
 }
 ```
 
-#### 2.2 Observing permissions in Jetpack Compose
+#### 3.2 Observing permissions in Jetpack Compose
 
 State of a permission and state of multiple permissions can also be observed in Jetpack Compose application as follows:
 
@@ -106,28 +140,28 @@ fun ExampleSinglePermission() {
 fun ExampleMultiplePermission() {
     val state by rememberMultiplePermissionState(
         Manifest.permission.CAMERA
-        Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_CONTACTS
     )
-    
+
     if (state.allGranted) {
         // Render something
     }
-    
+
     val grantedPermissions = state.grantedPermissions
     // Do something with `grantedPermissions`
-    
+
     val deniedPermissions = state.deniedPermissions
     // Do something with `deniedPermissions`
 }
 ```
 
-### 3. Requesting permission with PermissionFlow
+### 4. Requesting permission with PermissionFlow
 
 It's necessary to use utilities provided by this library to request permissions so that whenever permission state
 changes, this library takes care of notifying respective flows.
 
-#### 3.1 Request permission from Activity / Fragment
+#### 4.1 Request permission from Activity / Fragment
 
 Use [`registerForPermissionFlowRequestsResult()`](https://patilshreyas.github.io/permission-flow-android/docs/permission-flow/dev.shreyaspatil.permissionFlow.utils/register-for-permission-flow-requests-result.html) method to get `ActivityResultLauncher`
 and use `launch()` method to request for permission.
@@ -143,7 +177,7 @@ class ContactsActivity : AppCompatActivity() {
 }
 ```
 
-#### 3.2 Request permission in Jetpack Compose
+#### 4.2 Request permission in Jetpack Compose
 
 Use [`rememberPermissionFlowRequestLauncher()`](https://patilshreyas.github.io/permission-flow-android/docs/permission-flow-compose/dev.shreyaspatil.permissionflow.compose/remember-permission-flow-request-launcher.html) method to get `ManagedActivityResultLauncher`
 and use `launch()` method to request for permission.
@@ -152,14 +186,14 @@ and use `launch()` method to request for permission.
 @Composable
 fun Example() {
     val permissionLauncher = rememberPermissionFlowRequestLauncher()
-    
+
     Button(onClick = { permissionLauncher.launch(android.Manifest.permission.CAMERA, ...) }) {
         Text("Request Permissions")
-    } 
+    }
 }
 ```
 
-### 4. Manually notifying permission state changes ⚠️
+### 5. Manually notifying permission state changes ⚠️
 
 If you're not using `ActivityResultLauncher` APIs provided by this library then
 you will ***not receive permission state change updates***. But there's a provision by which
@@ -173,14 +207,14 @@ For example:
 ```kotlin
 class MyActivity: AppCompatActivity() {
     private val permissionFlow = PermissionFlow.getInstance()
-    
+
     private val permissionLauncher = registerForActivityResult(RequestPermission()) { isGranted ->
         permissionFlow.notifyPermissionsChanged(android.Manifest.permission.READ_CONTACTS)
     }
 }
 ```
 
-### 5. Manually Start / Stop Listening ⚠️
+### 6. Manually Start / Stop Listening ⚠️
 
 This library starts processing things lazily whenever `getPermissionState()` or `getMultiplePermissionState()` is called
 for the first time. But this can be controlled with these methods:
@@ -191,7 +225,7 @@ fun doSomething() {
     // This means the state of permission retrieved with [getMultiplePermissionState] method will not 
     // be updated after stopping listening. 
     permissionFlow.stopListening()
-    
+
     // Starts listening the changes of state of permissions after stopping listening
     permissionFlow.startListening()
 }

@@ -18,12 +18,14 @@ package dev.shreyaspatil.permissionFlow.initializer
 import android.content.Context
 import androidx.startup.Initializer
 import dev.shreyaspatil.permissionFlow.PermissionFlow
-import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
 
+/**
+ * Initializes [PermissionFlow] instance on app startup.
+ */
 class PermissionFlowInitializer : Initializer<Unit> {
 
     override fun create(context: Context) {
-        PermissionFlowImpl.init(context, PermissionFlow.DEFAULT_DISPATCHER)
+        PermissionFlow.init(context)
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
