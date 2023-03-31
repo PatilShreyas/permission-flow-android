@@ -10,7 +10,7 @@ buildscript {
         appCompatVersion = '1.4.2'
         jUnitVersion = '4.13.2'
         mockkVersion = '1.13.2'
-        turbineVersion = '0.12.1'
+        turbineVersion = '0.12.3'
         spotlessVersion = '6.7.2'
         mavenPublishVersion = '0.20.0'
         ktlintVersion = '0.45.2'
