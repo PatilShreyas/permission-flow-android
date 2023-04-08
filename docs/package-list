@@ -4,6 +4,7 @@ $dokka.linkExtension:html
 module:permission-flow
 dev.shreyaspatil.permissionFlow
 dev.shreyaspatil.permissionFlow.contract
+dev.shreyaspatil.permissionFlow.initializer
 dev.shreyaspatil.permissionFlow.utils
 module:permission-flow-compose
 dev.shreyaspatil.permissionflow.compose
