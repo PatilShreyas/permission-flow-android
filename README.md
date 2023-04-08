@@ -105,8 +105,8 @@ fun ExampleSinglePermission() {
 @Composable
 fun ExampleMultiplePermission() {
     val state by rememberMultiplePermissionState(
-        Manifest.permission.CAMERA
-                Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.CAMERA,
+        Manifest.permission.ACCESS_FINE_LOCATION,
         Manifest.permission.READ_CONTACTS
     )
 
