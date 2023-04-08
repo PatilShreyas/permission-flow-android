@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.StateFlow
  * Default implementation of a [PermissionFlow]
  */
 internal class PermissionFlowImpl @VisibleForTesting constructor(
-    private val watchmen: PermissionWatchmen
+    private val watchmen: PermissionWatchmen,
 ) : PermissionFlow {
 
     override fun getPermissionState(permission: String): StateFlow<PermissionState> {
@@ -62,7 +62,7 @@ internal class PermissionFlowImpl @VisibleForTesting constructor(
             if (instance == null) {
                 val watchmen = PermissionWatchmen(
                     application = context.applicationContext as Application,
-                    dispatcher = dispatcher
+                    dispatcher = dispatcher,
                 )
                 instance = PermissionFlowImpl(watchmen)
             }

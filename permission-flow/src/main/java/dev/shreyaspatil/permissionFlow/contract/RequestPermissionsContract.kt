@@ -35,7 +35,7 @@ import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsRe
 
 class RequestPermissionsContract(
     private val contract: RequestMultiplePermissions = RequestMultiplePermissions(),
-    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance()
+    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
 ) : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
 
     override fun createIntent(context: Context, input: Array<String>?): Intent {

@@ -49,7 +49,7 @@ private val permissions = arrayOf(
     android.Manifest.permission.READ_EXTERNAL_STORAGE,
     android.Manifest.permission.READ_CALL_LOG,
     android.Manifest.permission.READ_CONTACTS,
-    android.Manifest.permission.READ_PHONE_STATE
+    android.Manifest.permission.READ_PHONE_STATE,
 )
 
 @Composable
@@ -63,7 +63,7 @@ fun MainScreen() {
             .fillMaxSize()
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Button(onClick = { permissionLauncher.launch(permissions) }) {
             Text("Request Permissions")

@@ -45,12 +45,12 @@ import kotlinx.coroutines.yield
 @Suppress("OPT_IN_IS_NOT_ENABLED", "unused")
 internal class PermissionWatchmen(
     private val application: Application,
-    dispatcher: CoroutineDispatcher
+    dispatcher: CoroutineDispatcher,
 ) {
     private val watchmenScope = CoroutineScope(
         dispatcher +
             SupervisorJob() +
-            CoroutineName("PermissionWatchmen")
+            CoroutineName("PermissionWatchmen"),
     )
 
     private var watchEventsJob: Job? = null
@@ -87,8 +87,8 @@ internal class PermissionWatchmen(
                 permissionEvents.emit(
                     PermissionEvent(
                         permission = permission,
-                        isGranted = isPermissionGranted(permission)
-                    )
+                        isGranted = isPermissionGranted(permission),
+                    ),
                 )
             }
         }
@@ -159,7 +159,7 @@ internal class PermissionWatchmen(
     private fun isPermissionGranted(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             application,
-            permission
+            permission,
         ) == PackageManager.PERMISSION_GRANTED
     }
 

@@ -50,11 +50,11 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
 fun ComponentActivity.registerForPermissionFlowRequestsResult(
     requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
     activityResultRegistry: ActivityResultRegistry = getActivityResultRegistry(),
-    callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback()
+    callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback(),
 ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
     requestPermissionsContract,
     activityResultRegistry,
-    callback
+    callback,
 )
 
 /**
@@ -82,11 +82,11 @@ fun ComponentActivity.registerForPermissionFlowRequestsResult(
 fun Fragment.registerForPermissionFlowRequestsResult(
     requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
     activityResultRegistry: ActivityResultRegistry = requireActivity().activityResultRegistry,
-    callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback()
+    callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback(),
 ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
     requestPermissionsContract,
     activityResultRegistry,
-    callback
+    callback,
 )
 
 private fun <T> emptyCallback() = ActivityResultCallback<T> {}

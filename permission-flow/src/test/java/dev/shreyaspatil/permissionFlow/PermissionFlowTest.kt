@@ -43,7 +43,7 @@ class PermissionFlowTest {
         PermissionFlow.init(
             mockk {
                 every { applicationContext } returns mockk<Application>()
-            }
+            },
         )
 
         val instance1 = async { PermissionFlow.getInstance() }
