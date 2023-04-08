@@ -16,12 +16,10 @@
 package dev.shreyaspatil.permissionFlow
 
 import android.app.Application
-import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -42,9 +40,10 @@ class PermissionFlowTest {
 
     @Test
     fun testGetInstanceWithInit_shouldBeSingleInstanceAlways() = runTest {
-        PermissionFlowImpl.init(
-            context = mockk { every { applicationContext } returns mockk<Application>() },
-            dispatcher = UnconfinedTestDispatcher()
+        PermissionFlow.init(
+            mockk {
+                every { applicationContext } returns mockk<Application>()
+            }
         )
 
         val instance1 = async { PermissionFlow.getInstance() }
