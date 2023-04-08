@@ -15,6 +15,7 @@ buildscript {
         mavenPublishVersion = '0.20.0'
         ktlintVersion = '0.45.2'
         koverVersion = "0.5.1"
+        startupVersion = "1.1.1"
     }
 }
 

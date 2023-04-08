@@ -13,14 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package dev.shreyaspatil.permissionFlow.example
+package dev.shreyaspatil.permissionFlow.initializer
 
-import android.app.Application
+import android.content.Context
+import androidx.startup.Initializer
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 
-class ExampleApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-        PermissionFlow.init(this)
+/**
+ * Initializes [PermissionFlow] instance on app startup.
+ */
+class PermissionFlowInitializer : Initializer<Unit> {
+
+    override fun create(context: Context) {
+        PermissionFlow.init(context)
+    }
+
+    override fun dependencies(): List<Class<out Initializer<*>>> {
+        return emptyList()
     }
 }

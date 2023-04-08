@@ -50,6 +50,7 @@ android {
 dependencies {
     // Android
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.startup:startup-runtime:$startupVersion"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
