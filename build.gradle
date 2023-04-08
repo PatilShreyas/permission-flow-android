@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        agpVersion = '7.2.1'
+        agpVersion = '7.4.2'
         mavenPublishVersion = '0.25.1'
         kotlinVersion = '1.6.10'
         composeVersion = '1.1.1'
