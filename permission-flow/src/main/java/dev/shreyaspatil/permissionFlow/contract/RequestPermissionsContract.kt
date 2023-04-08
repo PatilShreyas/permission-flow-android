@@ -38,7 +38,7 @@ class RequestPermissionsContract(
     private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
 ) : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
 
-    override fun createIntent(context: Context, input: Array<String>?): Intent {
+    override fun createIntent(context: Context, input: Array<String>): Intent {
         return contract.createIntent(context, input ?: emptyArray())
     }
 
