@@ -17,33 +17,48 @@ package dev.shreyaspatil.permissionFlow.initializer
 
 import android.app.Application
 import android.content.Context
-import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
+import dev.shreyaspatil.permissionFlow.PermissionFlow
+import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.verify
+import org.junit.After
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Test
 
 class PermissionFlowInitializerTest {
 
+    private lateinit var initializer: PermissionFlowInitializer
+
+    @Before
+    fun setUp() {
+        mockkObject(PermissionFlow)
+        initializer = PermissionFlowInitializer()
+    }
+
+    @After
+    fun tearDown() {
+        clearAllMocks()
+    }
+
     @Test
     fun testInitializer() {
-        val initializer = PermissionFlowInitializer()
-        mockkObject(PermissionFlowImpl)
+        // Given: A application context providing context
         val context = mockk<Context> {
             every { applicationContext } returns mockk<Application>()
         }
 
+        // When: Initializer is created
         initializer.create(context = context)
 
-        verify(exactly = 1) { PermissionFlowImpl.init(context, any()) }
+        // Then: Permission flow should be initialized
+        verify(exactly = 1) { PermissionFlow.init(context) }
     }
 
     @Test
     fun testInitializerDependencies_shouldBeEmpty() {
-        val initializer = PermissionFlowInitializer()
-
         Assert.assertTrue(initializer.dependencies().isEmpty())
     }
 }
