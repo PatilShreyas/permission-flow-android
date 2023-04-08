@@ -219,19 +219,17 @@ class MyApplication: Application() {
 Disable auto initialization of library with default configuration using this:
 
 ```xml
-        <provider
-            android:name="androidx.startup.InitializationProvider"
-            android:authorities="${applicationId}.androidx-startup"
-            android:exported="false"
-            tools:node="merge">
+<provider
+    android:name="androidx.startup.InitializationProvider"
+    android:authorities="${applicationId}.androidx-startup"
+    android:exported="false"
+    tools:node="merge">
 
-            <meta-data
-                android:name="dev.shreyaspatil.permissionFlow.initializer.PermissionFlowInitializer"
-                android:value="androidx.startup"
-                tools:node="remove" />
-        </provider>
-
-
+    <meta-data
+        android:name="dev.shreyaspatil.permissionFlow.initializer.PermissionFlowInitializer"
+        android:value="androidx.startup"
+        tools:node="remove" />
+</provider>
 ```
 
 
