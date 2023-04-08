@@ -2,15 +2,15 @@
 buildscript {
     ext {
         agpVersion = '7.2.1'
-        mavenPublishVersion = '0.21.0'
+        mavenPublishVersion = '0.25.1'
         kotlinVersion = '1.6.10'
         composeVersion = '1.1.1'
         activityVersion = '1.4.0'
         coroutinesVersion = '1.6.4'
         appCompatVersion = '1.4.2'
         jUnitVersion = '4.13.2'
-        mockkVersion = '1.12.5'
-        turbineVersion = '0.8.0'
+        mockkVersion = '1.13.2'
+        turbineVersion = '0.12.1'
         spotlessVersion = '6.7.2'
         mavenPublishVersion = '0.20.0'
         ktlintVersion = '0.45.2'
