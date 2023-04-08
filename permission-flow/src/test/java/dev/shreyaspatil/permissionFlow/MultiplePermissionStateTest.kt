@@ -58,7 +58,7 @@ class MultiplePermissionStateTest {
             deniedPermission("D"),
         )
 
-        // Then: Permissions A and B should be present in granted permissions list
+        // Then: Permissions A and C should be present in granted permissions list
         assertEquals(permissions.grantedPermissions, listOf("A", "C"))
     }
 
@@ -72,7 +72,7 @@ class MultiplePermissionStateTest {
             deniedPermission("D"),
         )
 
-        // Then: Permissions A and B should be present in granted permissions list
+        // Then: Permissions B and D should be present in granted permissions list
         assertEquals(permissions.deniedPermissions, listOf("B", "D"))
     }
 
