@@ -48,7 +48,7 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
  */
 @Composable
 fun rememberPermissionState(
-    permission: String
+    permission: String,
 ): State<PermissionState> = remember {
     PermissionFlow.getInstance().getPermissionState(permission)
 }.collectAsState()
@@ -85,7 +85,7 @@ fun rememberPermissionState(
  */
 @Composable
 fun rememberMultiplePermissionState(
-    vararg permissions: String
+    vararg permissions: String,
 ): State<MultiplePermissionState> = remember {
     PermissionFlow.getInstance().getMultiplePermissionState(*permissions)
 }.collectAsState()
@@ -114,10 +114,10 @@ fun rememberMultiplePermissionState(
  */
 @Composable
 fun rememberPermissionFlowRequestLauncher(
-    onResult: (Map<String, Boolean>) -> Unit = {}
+    onResult: (Map<String, Boolean>) -> Unit = {},
 ): ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>> {
     return rememberLauncherForActivityResult(
         contract = RequestPermissionsContract(),
-        onResult = onResult
+        onResult = onResult,
     )
 }

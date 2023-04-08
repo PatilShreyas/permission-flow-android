@@ -28,7 +28,7 @@ import kotlinx.coroutines.flow.stateIn
  */
 private class CombinedStateFlow<T>(
     private val getValue: () -> T,
-    private val flow: Flow<T>
+    private val flow: Flow<T>,
 ) : StateFlow<T> {
 
     override val replayCache: List<T> get() = listOf(value)
@@ -44,7 +44,7 @@ private class CombinedStateFlow<T>(
  */
 internal fun <T> combineStates(
     getValue: () -> T,
-    flow: Flow<T>
+    flow: Flow<T>,
 ): StateFlow<T> = CombinedStateFlow(getValue, flow)
 
 /**
@@ -52,8 +52,8 @@ internal fun <T> combineStates(
  */
 internal inline fun <reified T, R> combineStates(
     vararg stateFlows: StateFlow<T>,
-    crossinline transform: (Array<T>) -> R
+    crossinline transform: (Array<T>) -> R,
 ): StateFlow<R> = combineStates(
     getValue = { transform(stateFlows.map { it.value }.toTypedArray()) },
-    flow = combine(*stateFlows) { transform(it) }
+    flow = combine(*stateFlows) { transform(it) },
 )

@@ -33,7 +33,7 @@ import kotlinx.coroutines.launch
 
 class ContactsViewModel(
     private val repository: ContactRepository,
-    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance()
+    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
 ) : ViewModel() {
     private val _states = Channel<ContactsUiState>(capacity = BUFFERED)
     val state: Flow<ContactsUiState> = _states.receiveAsFlow()

@@ -1,19 +1,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        agpVersion = '7.2.1'
+        agpVersion = '7.4.2'
         mavenPublishVersion = '0.25.1'
-        kotlinVersion = '1.6.10'
-        composeVersion = '1.1.1'
-        activityVersion = '1.4.0'
+        kotlinVersion = '1.8.10'
+        composeVersion = '1.4.1'
+        composeCompilerVersion = '1.4.4'
+        activityVersion = '1.7.0'
         coroutinesVersion = '1.6.4'
-        appCompatVersion = '1.4.2'
+        appCompatVersion = '1.6.1'
         jUnitVersion = '4.13.2'
-        mockkVersion = '1.13.2'
-        turbineVersion = '0.12.1'
-        spotlessVersion = '6.7.2'
-        mavenPublishVersion = '0.20.0'
-        ktlintVersion = '0.45.2'
+        mockkVersion = '1.13.4'
+        turbineVersion = '0.12.3'
+        spotlessVersion = '6.18.0'
         koverVersion = "0.5.1"
         startupVersion = "1.1.1"
     }
@@ -37,7 +36,7 @@ subprojects {
             targetExclude("$buildDir/**/*.kt")
             targetExclude('bin/**/*.kt')
 
-            ktlint(ktlintVersion)
+            ktlint()
             licenseHeaderFile rootProject.file('spotless/copyright.kt')
         }
     }

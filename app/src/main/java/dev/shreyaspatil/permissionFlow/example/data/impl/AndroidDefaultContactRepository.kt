@@ -32,7 +32,7 @@ import kotlinx.coroutines.withContext
 class AndroidDefaultContactRepository(
     private val contentResolver: ContentResolver,
     private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ContactRepository {
 
     override val allContacts: Flow<List<Contact>> = permissionFlow
@@ -53,7 +53,7 @@ class AndroidDefaultContactRepository(
                     ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
                     ContactsContract.CommonDataKinds.Phone.NUMBER,
                     ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                    ContactsContract.CommonDataKinds.Phone.PHOTO_URI
+                    ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
                 )
 
                 val order = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} ASC"
@@ -63,18 +63,18 @@ class AndroidDefaultContactRepository(
                     projection,
                     null,
                     null,
-                    order
+                    order,
                 )
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         val contactId = cursor.getStringOrNull(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
+                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID),
                         )
                         val name = cursor.getStringOrNull(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME),
                         )
                         val number = cursor.getStringOrNull(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER),
                         )
 
                         if (contactId != null && name != null && number != null) {
