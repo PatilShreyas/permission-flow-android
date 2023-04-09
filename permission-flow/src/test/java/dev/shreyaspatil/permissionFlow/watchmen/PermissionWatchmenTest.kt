@@ -269,7 +269,7 @@ class PermissionWatchmenTest {
             flow {
                 activityEventLock.acquire()
                 emit(Unit)
-            }
+            },
         )
 
         // Given: Watching permissions
@@ -314,6 +314,6 @@ class PermissionWatchmenTest {
 
     private fun runTest(testBody: suspend TestScope.() -> Unit) = runTest(
         context = dispatcher,
-        testBody = testBody
+        testBody = testBody,
     )
 }

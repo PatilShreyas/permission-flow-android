@@ -138,7 +138,7 @@ class ActivityLifecycleCallbackExtTest {
     private fun activity(
         isChangingConfigurations: Boolean = false,
         isInMultiWindowMode: Boolean = false,
-        isInPictureInPictureMode: Boolean = false
+        isInPictureInPictureMode: Boolean = false,
     ): Activity = mockk {
         every { isChangingConfigurations() } returns isChangingConfigurations
         every { isInMultiWindowMode() } returns isInMultiWindowMode

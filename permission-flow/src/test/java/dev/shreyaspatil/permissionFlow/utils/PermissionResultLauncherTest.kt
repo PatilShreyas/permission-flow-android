@@ -34,7 +34,7 @@ class PermissionResultLauncherTest {
                 registerForActivityResult(
                     any<ActivityResultContract<Array<String>, Map<String, Boolean>>>(),
                     any(),
-                    any<ActivityResultCallback<Map<String, Boolean>>>()
+                    any<ActivityResultCallback<Map<String, Boolean>>>(),
                 )
             } returns mockk<ActivityResultLauncher<Array<String>>>()
         }
@@ -53,7 +53,7 @@ class PermissionResultLauncherTest {
                 registerForActivityResult(
                     any<ActivityResultContract<Array<String>, Map<String, Boolean>>>(),
                     any(),
-                    any<ActivityResultCallback<Map<String, Boolean>>>()
+                    any<ActivityResultCallback<Map<String, Boolean>>>(),
                 )
             } returns mockk<ActivityResultLauncher<Array<String>>>()
         }

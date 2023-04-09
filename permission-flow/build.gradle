@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         minSdk 21
-        targetSdk 32
+        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -45,11 +45,13 @@ android {
             }
         }
     }
+    namespace 'dev.shreyaspatil.permissionFlow'
 }
 
 dependencies {
     // Android
     implementation "androidx.appcompat:appcompat:$appCompatVersion"
+    implementation "androidx.startup:startup-runtime:$startupVersion"
 
     // Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"

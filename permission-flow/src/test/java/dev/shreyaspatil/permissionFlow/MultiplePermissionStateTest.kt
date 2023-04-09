@@ -28,7 +28,7 @@ class MultiplePermissionStateTest {
         val permissions = multiplePermissionState(
             grantedPermission("A"),
             grantedPermission("B"),
-            grantedPermission("C")
+            grantedPermission("C"),
         )
 
         // Then: All permissions should be granted
@@ -41,7 +41,7 @@ class MultiplePermissionStateTest {
         val permissions = multiplePermissionState(
             grantedPermission("A"),
             deniedPermission("B"),
-            grantedPermission("C")
+            grantedPermission("C"),
         )
 
         // Then: All permissions should NOT be granted
@@ -55,10 +55,10 @@ class MultiplePermissionStateTest {
             grantedPermission("A"),
             deniedPermission("B"),
             grantedPermission("C"),
-            deniedPermission("D")
+            deniedPermission("D"),
         )
 
-        // Then: Permissions A and B should be present in granted permissions list
+        // Then: Permissions A and C should be present in granted permissions list
         assertEquals(permissions.grantedPermissions, listOf("A", "C"))
     }
 
@@ -69,10 +69,10 @@ class MultiplePermissionStateTest {
             grantedPermission("A"),
             deniedPermission("B"),
             grantedPermission("C"),
-            deniedPermission("D")
+            deniedPermission("D"),
         )
 
-        // Then: Permissions A and B should be present in granted permissions list
+        // Then: Permissions B and D should be present in granted permissions list
         assertEquals(permissions.deniedPermissions, listOf("B", "D"))
     }
 
@@ -81,11 +81,11 @@ class MultiplePermissionStateTest {
 
     private fun grantedPermission(permission: String) = PermissionState(
         permission = permission,
-        isGranted = true
+        isGranted = true,
     )
 
     private fun deniedPermission(permission: String) = PermissionState(
         permission = permission,
-        isGranted = false
+        isGranted = false,
     )
 }
