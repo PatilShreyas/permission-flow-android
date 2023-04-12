@@ -10,7 +10,7 @@ buildscript {
         coroutinesVersion = '1.6.4'
         appCompatVersion = '1.6.1'
         jUnitVersion = '4.13.2'
-        mockkVersion = '1.13.4'
+        mockkVersion = '1.13.5'
         turbineVersion = '0.12.3'
         spotlessVersion = '6.18.0'
         koverVersion = "0.5.1"
