@@ -30,6 +30,7 @@
         <activity android:name=".ui.composePermission.ComposePermissionActivity"/>
         <activity android:name=".ui.multipermission.MultiPermissionActivity"/>
         <activity android:name=".ui.contacts.ContactsActivity"/>
+        <activity android:name=".ui.fragment.ExampleFragmentActivity"/>
     </application>
 
 </manifest>
