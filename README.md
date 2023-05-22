@@ -12,12 +12,6 @@ Android Developers_.
 [![dokka](https://img.shields.io/badge/Dokka-Docs-blueviolet.svg?style=flat&logo=kotlin)](https://patilshreyas.github.io/permission-flow-android/docs/)
 [![kover](https://img.shields.io/badge/Kover-Coverage-blueviolet.svg?style=flat&logo=kotlin)](https://patilshreyas.github.io/permission-flow-android/coverageReport/)
 
-[![Github Followers](https://img.shields.io/github/followers/PatilShreyas?label=Follow&style=social)](https://github.com/PatilShreyas)
-[![GitHub stars](https://img.shields.io/github/stars/PatilShreyas/permission-flow-android?style=social)](https://github.com/PatilShreyas/permission-flow-android/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/PatilShreyas/permission-flow-android?style=social)](https://github.com/PatilShreyas/permission-flow-android/network/members)
-[![GitHub watchers](https://img.shields.io/github/watchers/PatilShreyas/permission-flow-android?style=social)](https://github.com/PatilShreyas/permission-flow-android/watchers)
-[![Twitter Follow](https://img.shields.io/twitter/follow/imShreyasPatil?label=Follow&style=social)](https://twitter.com/imShreyasPatil)
-
 ## 💡Introduction
 
 In big projects, app is generally divided in several modules and in such cases, if any individual
