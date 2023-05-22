@@ -74,6 +74,35 @@ fun ComponentActivity.registerForPermissionFlowRequestsResult(
  * ```
  *
  * @param requestPermissionsContract A contract specifying permission request and result.
+ * registry.
+ * @param callback Callback of a permission state change.
+ */
+@JvmOverloads
+fun Fragment.registerForPermissionFlowRequestsResult(
+    requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
+    callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback(),
+): ActivityResultLauncher<Array<String>> = registerForActivityResult(
+    requestPermissionsContract,
+    callback,
+)
+
+/**
+ * Returns a [ActivityResultLauncher] for this Fragment which internally notifies [PermissionFlow]
+ * about the state change whenever permission state is changed with this launcher.
+ *
+ * Usage:
+ *
+ * ```
+ *  class MyFragment: Fragment() {
+ *      private val permissionLauncher = registerForPermissionFlowRequestsResult()
+ *
+ *      fun askContactPermission() {
+ *          permissionLauncher.launch(android.Manifest.permission.READ_CONTACTS)
+ *      }
+ *  }
+ * ```
+ *
+ * @param requestPermissionsContract A contract specifying permission request and result.
  * @param activityResultRegistry Activity result registry. By default it uses Activity's Result
  * registry.
  * @param callback Callback of a permission state change.
@@ -81,7 +110,7 @@ fun ComponentActivity.registerForPermissionFlowRequestsResult(
 @JvmOverloads
 fun Fragment.registerForPermissionFlowRequestsResult(
     requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
-    activityResultRegistry: ActivityResultRegistry = requireActivity().activityResultRegistry,
+    activityResultRegistry: ActivityResultRegistry,
     callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback(),
 ): ActivityResultLauncher<Array<String>> = registerForActivityResult(
     requestPermissionsContract,

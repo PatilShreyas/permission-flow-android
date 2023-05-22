@@ -26,4 +26,11 @@
         android:layout_height="wrap_content"
         android:text="Observing permissions in Compose"
         tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/buttonFragmentSample"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fragment Example"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

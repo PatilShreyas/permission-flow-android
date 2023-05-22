@@ -58,10 +58,34 @@ class PermissionResultLauncherTest {
             } returns mockk<ActivityResultLauncher<Array<String>>>()
         }
 
-        fragment.registerForPermissionFlowRequestsResult(mockk(), mockk())
+        fragment.registerForPermissionFlowRequestsResult(mockk(), mockk(), mockk())
 
         verify(exactly = 1) {
             fragment.registerForActivityResult(any<RequestPermissionsContract>(), any(), any())
+        }
+    }
+
+    @Test
+    fun test_Fragment_registerForPermissionFlowRequestsResult_withoutActivityRegistry() {
+        val fragment = mockk<Fragment> {
+            every {
+                registerForActivityResult(
+                    any<ActivityResultContract<Array<String>, Map<String, Boolean>>>(),
+                    any<ActivityResultCallback<Map<String, Boolean>>>(),
+                )
+            } returns mockk<ActivityResultLauncher<Array<String>>>()
+        }
+
+        val requestPermissionsContract = mockk<RequestPermissionsContract>()
+        val callback = mockk<ActivityResultCallback<Map<String, Boolean>>>()
+
+        fragment.registerForPermissionFlowRequestsResult(
+            requestPermissionsContract = requestPermissionsContract,
+            callback = callback,
+        )
+
+        verify(exactly = 1) {
+            fragment.registerForActivityResult(requestPermissionsContract, callback)
         }
     }
 }

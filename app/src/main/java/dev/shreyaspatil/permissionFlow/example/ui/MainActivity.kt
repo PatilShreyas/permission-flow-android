@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity
 import dev.shreyaspatil.permissionFlow.example.databinding.ActivityMainBinding
 import dev.shreyaspatil.permissionFlow.example.ui.composePermission.ComposePermissionActivity
 import dev.shreyaspatil.permissionFlow.example.ui.contacts.ContactsActivity
+import dev.shreyaspatil.permissionFlow.example.ui.fragment.ExampleFragmentActivity
 import dev.shreyaspatil.permissionFlow.example.ui.multipermission.MultiPermissionActivity
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
             buttonContacts.setOnClickListener { launchScreen<ContactsActivity>() }
             buttonMultiPermission.setOnClickListener { launchScreen<MultiPermissionActivity>() }
             buttonComposeSample.setOnClickListener { launchScreen<ComposePermissionActivity>() }
+            buttonFragmentSample.setOnClickListener { launchScreen<ExampleFragmentActivity>() }
         }
     }
 
