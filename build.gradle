@@ -7,7 +7,7 @@ buildscript {
         composeVersion = '1.4.1'
         composeCompilerVersion = '1.4.4'
         activityVersion = '1.7.0'
-        coroutinesVersion = '1.7.1'
+        coroutinesVersion = '1.7.2'
         appCompatVersion = '1.6.1'
         jUnitVersion = '4.13.2'
         mockkVersion = '1.13.5'
