@@ -11,7 +11,7 @@ buildscript {
         appCompatVersion = '1.6.1'
         jUnitVersion = '4.13.2'
         mockkVersion = '1.13.5'
-        turbineVersion = '0.12.3'
+        turbineVersion = '1.0.0'
         spotlessVersion = '6.19.0'
         koverVersion = "0.5.1"
         startupVersion = "1.1.1"
