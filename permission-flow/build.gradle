@@ -57,6 +57,7 @@ dependencies {
 
     // Testing
     testImplementation "junit:junit:$jUnitVersion"
+    testImplementation("org.robolectric:robolectric:$robolectricVersion")
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
     testImplementation "app.cash.turbine:turbine:$turbineVersion"
     testImplementation "io.mockk:mockk:$mockkVersion"

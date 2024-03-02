@@ -11,6 +11,7 @@ buildscript {
         coroutinesVersion = '1.8.0'
         appCompatVersion = '1.6.1'
         jUnitVersion = '4.13.2'
+        robolectricVersion = "4.11.1"
         mockkVersion = '1.13.10'
         turbineVersion = '1.0.0'
         spotlessVersion = '6.25.0'
