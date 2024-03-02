@@ -32,9 +32,10 @@ class CombinedStateFlowTest {
         val booleanState = MutableStateFlow(true)
 
         // When: State flows are combined
-        val state = combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
-            TestState(s1 as Int, s2 as String, s3 as Boolean)
-        }
+        val state =
+            combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
+                TestState(s1 as Int, s2 as String, s3 as Boolean)
+            }
 
         // Then: Combined state should have valid initial value
         val expectedState = TestState(intValue = 0, stringValue = "", booleanValue = true)
@@ -48,9 +49,10 @@ class CombinedStateFlowTest {
         val stringState = MutableStateFlow("")
         val booleanState = MutableStateFlow(true)
 
-        val state = combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
-            TestState(s1 as Int, s2 as String, s3 as Boolean)
-        }
+        val state =
+            combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
+                TestState(s1 as Int, s2 as String, s3 as Boolean)
+            }
 
         // When: Individual states are updated
         intState.value = 10
@@ -69,9 +71,10 @@ class CombinedStateFlowTest {
         val stringState = MutableStateFlow("")
         val booleanState = MutableStateFlow(true)
 
-        val state = combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
-            TestState(s1 as Int, s2 as String, s3 as Boolean)
-        }
+        val state =
+            combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
+                TestState(s1 as Int, s2 as String, s3 as Boolean)
+            }
 
         // When: Individual states are updated
         intState.value = 10
@@ -90,9 +93,10 @@ class CombinedStateFlowTest {
         val stringState = MutableStateFlow("")
         val booleanState = MutableStateFlow(true)
 
-        val state = combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
-            TestState(s1 as Int, s2 as String, s3 as Boolean)
-        }
+        val state =
+            combineStates(intState, stringState, booleanState) { (s1, s2, s3) ->
+                TestState(s1 as Int, s2 as String, s3 as Boolean)
+            }
 
         // When: Individual states are collected
         state.test {
@@ -123,8 +127,8 @@ class CombinedStateFlowTest {
     }
 
     /**
-     * Sample class used to test combining different StateFlows into transformed StateFlow
-     * of this class.
+     * Sample class used to test combining different StateFlows into transformed StateFlow of this
+     * class.
      */
     private data class TestState(
         val intValue: Int,

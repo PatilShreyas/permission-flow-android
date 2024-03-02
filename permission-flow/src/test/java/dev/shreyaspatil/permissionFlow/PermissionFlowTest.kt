@@ -41,9 +41,7 @@ class PermissionFlowTest {
     @Test
     fun testGetInstanceWithInit_shouldBeSingleInstanceAlways() = runTest {
         PermissionFlow.init(
-            mockk {
-                every { applicationContext } returns mockk<Application>()
-            },
+            mockk { every { applicationContext } returns mockk<Application>() },
         )
 
         val instance1 = async { PermissionFlow.getInstance() }

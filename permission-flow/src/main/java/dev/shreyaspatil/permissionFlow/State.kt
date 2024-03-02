@@ -29,19 +29,12 @@ data class PermissionState(val permission: String, val isGranted: Boolean)
  * @property permissions List of state of multiple permissions
  */
 data class MultiplePermissionState(val permissions: List<PermissionState>) {
-
-    /**
-     * Returns true if all permissions are granted by user
-     */
+    /** Returns true if all permissions are granted by user */
     val allGranted by lazy { permissions.all { it.isGranted } }
 
-    /**
-     * List of permissions which are granted by user
-     */
+    /** List of permissions which are granted by user */
     val grantedPermissions by lazy { permissions.filter { it.isGranted }.map { it.permission } }
 
-    /**
-     * List of permissions which are denied / not granted by user
-     */
+    /** List of permissions which are denied / not granted by user */
     val deniedPermissions by lazy { permissions.filter { !it.isGranted }.map { it.permission } }
 }

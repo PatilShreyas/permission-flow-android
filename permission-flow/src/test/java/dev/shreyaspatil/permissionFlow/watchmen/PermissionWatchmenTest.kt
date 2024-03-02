@@ -40,7 +40,6 @@ import org.junit.Test
 @Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalCoroutinesApi::class)
 class PermissionWatchmenTest {
-
     private val dispatcher = StandardTestDispatcher()
     private lateinit var application: Application
 
@@ -290,30 +289,28 @@ class PermissionWatchmenTest {
         assertTrue(permissionFlow3.value.isGranted)
     }
 
-    /**
-     * Mocks permission state i.e. granted / denied.
-     */
+    /** Mocks permission state i.e. granted / denied. */
     private fun mockPermissions(vararg permissionStates: Pair<String, Boolean>) {
         mockkStatic(ContextCompat::checkSelfPermission)
         permissionStates.forEach { (permission, isGranted) ->
-            every { ContextCompat.checkSelfPermission(any(), permission) } returns if (isGranted) {
-                PackageManager.PERMISSION_GRANTED
-            } else {
-                PackageManager.PERMISSION_DENIED
-            }
+            every { ContextCompat.checkSelfPermission(any(), permission) } returns
+                if (isGranted) {
+                    PackageManager.PERMISSION_GRANTED
+                } else {
+                    PackageManager.PERMISSION_DENIED
+                }
         }
     }
 
-    /**
-     * Mocks application's [activityForegroundEventFlow] with the specified [flow]
-     */
+    /** Mocks application's [activityForegroundEventFlow] with the specified [flow] */
     private fun mockActivityForegroundEventFlow(flow: Flow<Unit>) {
         mockkStatic(Application::activityForegroundEventFlow)
         every { application.activityForegroundEventFlow } returns flow
     }
 
-    private fun runTest(testBody: suspend TestScope.() -> Unit) = runTest(
-        context = dispatcher,
-        testBody = testBody,
-    )
+    private fun runTest(testBody: suspend TestScope.() -> Unit) =
+        runTest(
+            context = dispatcher,
+            testBody = testBody,
+        )
 }

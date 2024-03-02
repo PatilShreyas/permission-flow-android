@@ -6,11 +6,10 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 21
-        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -50,12 +49,13 @@ android {
 dependencies {
     api project(":permission-flow")
 
-    implementation "androidx.compose.runtime:runtime:$composeVersion"
+    implementation platform("androidx.compose:compose-bom:$composeBomVersion")
+    implementation "androidx.compose.runtime:runtime"
     implementation "androidx.activity:activity-compose:$activityVersion"
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
 
 dokkaHtml.configure {

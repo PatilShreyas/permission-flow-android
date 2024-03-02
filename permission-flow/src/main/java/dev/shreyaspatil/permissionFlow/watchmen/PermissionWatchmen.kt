@@ -39,26 +39,21 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 
-/**
- * A watchmen which keeps watching state changes of permissions and events of permissions.
- */
+/** A watchmen which keeps watching state changes of permissions and events of permissions. */
 @Suppress("OPT_IN_IS_NOT_ENABLED", "unused")
 internal class PermissionWatchmen(
     private val application: Application,
     dispatcher: CoroutineDispatcher,
 ) {
-    private val watchmenScope = CoroutineScope(
-        dispatcher +
-            SupervisorJob() +
-            CoroutineName("PermissionWatchmen"),
-    )
+    private val watchmenScope =
+        CoroutineScope(
+            dispatcher + SupervisorJob() + CoroutineName("PermissionWatchmen"),
+        )
 
     private var watchEventsJob: Job? = null
     private var watchActivityEventJob: Job? = null
 
-    /**
-     * A in-memory store for storing permission and its state holder i.e. [StateFlow]
-     */
+    /** A in-memory store for storing permission and its state holder i.e. [StateFlow] */
     private val permissionFlows = mutableMapOf<String, PermissionStateFlowDelegate>()
 
     private val permissionEvents = MutableSharedFlow<PermissionEvent>()
@@ -73,10 +68,8 @@ internal class PermissionWatchmen(
         // Wakeup watchmen if sleeping
         wakeUp()
 
-        val permissionStates = permissions
-            .distinct()
-            .map { getOrCreatePermissionStateFlow(it) }
-            .toTypedArray()
+        val permissionStates =
+            permissions.distinct().map { getOrCreatePermissionStateFlow(it) }.toTypedArray()
 
         return combineStates(*permissionStates) { MultiplePermissionState(it.toList()) }
     }
@@ -107,28 +100,31 @@ internal class PermissionWatchmen(
     }
 
     /**
-     * First finds for existing flow (if available) otherwise creates a new [MutableStateFlow]
-     * for [permission] and returns a read-only [StateFlow] for a [permission].
+     * First finds for existing flow (if available) otherwise creates a new [MutableStateFlow] for
+     * [permission] and returns a read-only [StateFlow] for a [permission].
      */
     @Synchronized
     private fun getOrCreatePermissionStateFlow(permission: String): StateFlow<PermissionState> {
-        val delegate = permissionFlows[permission] ?: run {
-            val initialState = PermissionState(permission, isPermissionGranted(permission))
-            PermissionStateFlowDelegate(initialState).also { permissionFlows[permission] = it }
-        }
+        val delegate =
+            permissionFlows[permission]
+                ?: run {
+                    val initialState = PermissionState(permission, isPermissionGranted(permission))
+                    PermissionStateFlowDelegate(initialState).also {
+                        permissionFlows[permission] = it
+                    }
+                }
         return delegate.state
     }
 
-    /**
-     * Watches for the permission events and updates appropriate state holders of permission
-     */
+    /** Watches for the permission events and updates appropriate state holders of permission */
     private fun watchPermissionEvents() {
         if (watchEventsJob != null && watchEventsJob?.isActive == true) return
-        watchEventsJob = watchmenScope.launch {
-            permissionEvents.collect { (permission, isGranted) ->
-                permissionFlows[permission]?.setState(PermissionState(permission, isGranted))
+        watchEventsJob =
+            watchmenScope.launch {
+                permissionEvents.collect { (permission, isGranted) ->
+                    permissionFlows[permission]?.setState(PermissionState(permission, isGranted))
+                }
             }
-        }
     }
 
     /**
@@ -139,16 +135,17 @@ internal class PermissionWatchmen(
     @OptIn(FlowPreview::class)
     private fun watchActivities() {
         if (watchActivityEventJob != null && watchActivityEventJob?.isActive == true) return
-        watchActivityEventJob = application.activityForegroundEventFlow
-            // This is just to avoid frequent events.
-            .debounce(DEFAULT_DEBOUNCE_FOR_ACTIVITY_CALLBACK)
-            .onEach {
-                // Since this is not priority task, we want to yield current thread for other
-                // tasks for the watchmen.
-                yield()
-                notifyAllPermissionsChanged()
-            }
-            .launchIn(watchmenScope)
+        watchActivityEventJob =
+            application.activityForegroundEventFlow
+                // This is just to avoid frequent events.
+                .debounce(DEFAULT_DEBOUNCE_FOR_ACTIVITY_CALLBACK)
+                .onEach {
+                    // Since this is not priority task, we want to yield current thread for other
+                    // tasks for the watchmen.
+                    yield()
+                    notifyAllPermissionsChanged()
+                }
+                .launchIn(watchmenScope)
     }
 
     private fun notifyAllPermissionsChanged() {
@@ -171,9 +168,7 @@ internal class PermissionWatchmen(
      */
     private data class PermissionEvent(val permission: String, val isGranted: Boolean)
 
-    /**
-     * A delegate for [MutableStateFlow] which creates flow for holding state of a permission.
-     */
+    /** A delegate for [MutableStateFlow] which creates flow for holding state of a permission. */
     private class PermissionStateFlowDelegate(initialState: PermissionState) {
 
         private val _state = MutableStateFlow(initialState)

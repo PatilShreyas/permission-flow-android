@@ -35,8 +35,8 @@ class ContactsViewModel(
     private val repository: ContactRepository,
     private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
 ) : ViewModel() {
-    private val _states = Channel<ContactsUiState>(capacity = BUFFERED)
-    val state: Flow<ContactsUiState> = _states.receiveAsFlow()
+    private val uiEvents = Channel<ContactsUiEvents>(capacity = BUFFERED)
+    val state: Flow<ContactsUiEvents> = uiEvents.receiveAsFlow()
 
     init {
         observeContacts()
@@ -46,8 +46,8 @@ class ContactsViewModel(
     private fun observeContacts() {
         viewModelScope.launch {
             repository.allContacts
-                .catch { setNextState(ContactsUiState.Failure(it.message ?: "Error occurred")) }
-                .collect { contacts -> setNextState(ContactsUiState.ContactsAvailable(contacts)) }
+                .catch { setNextState(ContactsUiEvents.Failure(it.message ?: "Error occurred")) }
+                .collect { contacts -> setNextState(ContactsUiEvents.ContactsAvailable(contacts)) }
         }
     }
 
@@ -55,23 +55,24 @@ class ContactsViewModel(
         viewModelScope.launch {
             permissionFlow.getPermissionState(Manifest.permission.READ_CONTACTS).collect { state ->
                 if (state.isGranted) {
-                    setNextState(ContactsUiState.ContactPermissionGranted)
+                    setNextState(ContactsUiEvents.ContactPermissionGranted)
                 } else {
-                    setNextState(ContactsUiState.ContactPermissionNotGranted)
+                    setNextState(ContactsUiEvents.ContactPermissionNotGranted)
                 }
             }
         }
     }
 
-    private fun setNextState(nextState: ContactsUiState) {
-        _states.trySend(nextState)
+    private fun setNextState(nextState: ContactsUiEvents) {
+        uiEvents.trySend(nextState)
     }
 
     class FactoryProvider(private val contentResolver: ContentResolver) {
         fun get(): ViewModelProvider.Factory {
-            val initializer = ViewModelInitializer(ContactsViewModel::class.java) {
-                ContactsViewModel(AndroidDefaultContactRepository(contentResolver))
-            }
+            val initializer =
+                ViewModelInitializer(ContactsViewModel::class.java) {
+                    ContactsViewModel(AndroidDefaultContactRepository(contentResolver))
+                }
             return ViewModelProvider.Factory.from(initializer)
         }
     }

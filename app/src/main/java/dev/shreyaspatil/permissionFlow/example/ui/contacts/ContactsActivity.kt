@@ -31,9 +31,8 @@ import kotlinx.coroutines.flow.onEach
 class ContactsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContactsBinding
-    private val viewModel by viewModels<ContactsViewModel> {
-        ContactsViewModel.FactoryProvider(contentResolver).get()
-    }
+    private val viewModel by
+        viewModels<ContactsViewModel> { ContactsViewModel.FactoryProvider(contentResolver).get() }
 
     private val permissionLauncher = registerForPermissionFlowRequestsResult()
 
@@ -44,26 +43,25 @@ class ContactsActivity : AppCompatActivity() {
         observeStates()
     }
 
-    private fun render(state: ContactsUiState) {
+    private fun render(state: ContactsUiEvents) {
         when (state) {
-            ContactsUiState.ContactPermissionGranted -> {
+            ContactsUiEvents.ContactPermissionGranted -> {
                 binding.permissionStatusText.apply {
                     text = "Contacts Permission Granted!"
                     setOnClickListener(null)
                 }
             }
-            ContactsUiState.ContactPermissionNotGranted -> {
+            ContactsUiEvents.ContactPermissionNotGranted -> {
                 binding.permissionStatusText.apply {
                     text = "Click here to ask for contacts permission"
                     setOnClickListener { askContactsPermission() }
                 }
             }
-            is ContactsUiState.ContactsAvailable -> {
-                binding.contactsDataText.text = state.contacts.joinToString("\n") {
-                    "${it.id}. ${it.name} (${it.number})"
-                }
+            is ContactsUiEvents.ContactsAvailable -> {
+                binding.contactsDataText.text =
+                    state.contacts.joinToString("\n") { "${it.id}. ${it.name} (${it.number})" }
             }
-            is ContactsUiState.Failure -> {
+            is ContactsUiEvents.Failure -> {
                 Toast.makeText(this, state.error, Toast.LENGTH_SHORT).show()
             }
         }
@@ -74,9 +72,6 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun observeStates() {
-        viewModel.state
-            .flowWithLifecycle(lifecycle)
-            .onEach { render(it) }
-            .launchIn(lifecycleScope)
+        viewModel.state.flowWithLifecycle(lifecycle).onEach { render(it) }.launchIn(lifecycleScope)
     }
 }

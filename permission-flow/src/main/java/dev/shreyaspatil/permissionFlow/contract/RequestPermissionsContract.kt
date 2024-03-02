@@ -23,7 +23,6 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import dev.shreyaspatil.permissionFlow.PermissionFlow
-import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsResult
 
 /**
  * An [ActivityResultContract] which delegates request and response to
@@ -32,17 +31,21 @@ import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsRe
  *
  * Refer to [ComponentActivity.registerForPermissionFlowRequestsResult] for actual usage.
  */
-
 class RequestPermissionsContract(
     private val contract: RequestMultiplePermissions = RequestMultiplePermissions(),
     private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
 ) : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
-
-    override fun createIntent(context: Context, input: Array<String>): Intent {
+    override fun createIntent(
+        context: Context,
+        input: Array<String>,
+    ): Intent {
         return contract.createIntent(context, input ?: emptyArray())
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): Map<String, Boolean> {
+    override fun parseResult(
+        resultCode: Int,
+        intent: Intent?,
+    ): Map<String, Boolean> {
         return contract.parseResult(resultCode, intent).also {
             val permissions = it.keys.filterNotNull().toTypedArray()
             permissionFlow.notifyPermissionsChanged(*permissions)

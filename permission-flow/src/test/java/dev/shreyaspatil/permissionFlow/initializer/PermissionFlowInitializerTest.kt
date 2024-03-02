@@ -29,7 +29,6 @@ import org.junit.Before
 import org.junit.Test
 
 class PermissionFlowInitializerTest {
-
     private lateinit var initializer: PermissionFlowInitializer
 
     @Before
@@ -46,9 +45,7 @@ class PermissionFlowInitializerTest {
     @Test
     fun testInitializer() {
         // Given: A application context providing context
-        val context = mockk<Context> {
-            every { applicationContext } returns mockk<Application>()
-        }
+        val context = mockk<Context> { every { applicationContext } returns mockk<Application>() }
 
         // When: Initializer is created
         initializer.create(context = context)

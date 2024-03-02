@@ -43,19 +43,17 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
  * ```
  *
  * @param permission The permission to observe.
- *
  * @throws IllegalStateException If [PermissionFlow] is not initialized
  */
 @Composable
 fun rememberPermissionState(
     permission: String,
-): State<PermissionState> = remember {
-    PermissionFlow.getInstance().getPermissionState(permission)
-}.collectAsState()
+): State<PermissionState> =
+    remember { PermissionFlow.getInstance().getPermissionState(permission) }.collectAsState()
 
 /**
- * Creates a [MultiplePermissionState] for a multiple [permissions] that is remembered
- * across compositions.
+ * Creates a [MultiplePermissionState] for a multiple [permissions] that is remembered across
+ * compositions.
  *
  * Example:
  * ```
@@ -80,22 +78,20 @@ fun rememberPermissionState(
  * ```
  *
  * @param permissions The list of permissions to observe.
- *
  * @throws IllegalStateException If [PermissionFlow] is not initialized
  */
 @Composable
 fun rememberMultiplePermissionState(
     vararg permissions: String,
-): State<MultiplePermissionState> = remember {
-    PermissionFlow.getInstance().getMultiplePermissionState(*permissions)
-}.collectAsState()
+): State<MultiplePermissionState> =
+    remember { PermissionFlow.getInstance().getMultiplePermissionState(*permissions) }
+        .collectAsState()
 
 /**
- * Creates a [ManagedActivityResultLauncher] that is tied with [PermissionFlow] APIs and
- * remembered across recompositions.
+ * Creates a [ManagedActivityResultLauncher] that is tied with [PermissionFlow] APIs and remembered
+ * across recompositions.
  *
  * Example:
- *
  * ```
  *  @Composable
  *  fun DemoPermissionLaunch() {
