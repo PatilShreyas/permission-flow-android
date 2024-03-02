@@ -23,7 +23,6 @@ import dev.shreyaspatil.permissionFlow.PermissionFlow
  * Initializes [PermissionFlow] instance on app startup.
  */
 class PermissionFlowInitializer : Initializer<Unit> {
-
     override fun create(context: Context) {
         PermissionFlow.init(context)
     }

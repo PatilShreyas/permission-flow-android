@@ -27,6 +27,7 @@ import dev.shreyaspatil.permissionFlow.example.databinding.ViewFragmentExampleBi
 import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsResult
 import kotlinx.coroutines.launch
 
+@Suppress("ktlint:standard:property-naming")
 class ExampleFragment : Fragment() {
 
     private var _binding: ViewFragmentExampleBinding? = null

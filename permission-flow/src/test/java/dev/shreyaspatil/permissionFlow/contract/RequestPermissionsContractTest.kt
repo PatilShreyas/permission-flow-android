@@ -26,7 +26,6 @@ import org.junit.Before
 import org.junit.Test
 
 class RequestPermissionsContractTest {
-
     private lateinit var requestMultiplePermissions: RequestMultiplePermissions
     private lateinit var permissionFlow: PermissionFlow
     private lateinit var context: Context

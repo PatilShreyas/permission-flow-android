@@ -44,26 +44,26 @@ class ContactsActivity : AppCompatActivity() {
         observeStates()
     }
 
-    private fun render(state: ContactsUiState) {
+    private fun render(state: ContactsUiEvents) {
         when (state) {
-            ContactsUiState.ContactPermissionGranted -> {
+            ContactsUiEvents.ContactPermissionGranted -> {
                 binding.permissionStatusText.apply {
                     text = "Contacts Permission Granted!"
                     setOnClickListener(null)
                 }
             }
-            ContactsUiState.ContactPermissionNotGranted -> {
+            ContactsUiEvents.ContactPermissionNotGranted -> {
                 binding.permissionStatusText.apply {
                     text = "Click here to ask for contacts permission"
                     setOnClickListener { askContactsPermission() }
                 }
             }
-            is ContactsUiState.ContactsAvailable -> {
+            is ContactsUiEvents.ContactsAvailable -> {
                 binding.contactsDataText.text = state.contacts.joinToString("\n") {
                     "${it.id}. ${it.name} (${it.number})"
                 }
             }
-            is ContactsUiState.Failure -> {
+            is ContactsUiEvents.Failure -> {
                 Toast.makeText(this, state.error, Toast.LENGTH_SHORT).show()
             }
         }

@@ -27,7 +27,6 @@ import org.junit.Before
 import org.junit.Test
 
 class PermissionFlowImplTest {
-
     private lateinit var watchmen: PermissionWatchmen
     private lateinit var permissionFlow: PermissionFlowImpl
 

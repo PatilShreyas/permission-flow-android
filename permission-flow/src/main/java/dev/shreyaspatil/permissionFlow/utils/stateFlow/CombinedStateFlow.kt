@@ -30,7 +30,6 @@ private class CombinedStateFlow<T>(
     private val getValue: () -> T,
     private val flow: Flow<T>,
 ) : StateFlow<T> {
-
     override val replayCache: List<T> get() = listOf(value)
 
     override val value: T get() = getValue()

@@ -29,7 +29,6 @@ import org.junit.Before
 import org.junit.Test
 
 class PermissionFlowInitializerTest {
-
     private lateinit var initializer: PermissionFlowInitializer
 
     @Before

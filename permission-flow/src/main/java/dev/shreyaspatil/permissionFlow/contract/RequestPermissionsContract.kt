@@ -37,12 +37,17 @@ class RequestPermissionsContract(
     private val contract: RequestMultiplePermissions = RequestMultiplePermissions(),
     private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),
 ) : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
-
-    override fun createIntent(context: Context, input: Array<String>): Intent {
+    override fun createIntent(
+        context: Context,
+        input: Array<String>,
+    ): Intent {
         return contract.createIntent(context, input ?: emptyArray())
     }
 
-    override fun parseResult(resultCode: Int, intent: Intent?): Map<String, Boolean> {
+    override fun parseResult(
+        resultCode: Int,
+        intent: Intent?,
+    ): Map<String, Boolean> {
         return contract.parseResult(resultCode, intent).also {
             val permissions = it.keys.filterNotNull().toTypedArray()
             permissionFlow.notifyPermissionsChanged(*permissions)

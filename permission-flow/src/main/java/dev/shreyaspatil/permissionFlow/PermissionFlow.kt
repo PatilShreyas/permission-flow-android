@@ -191,7 +191,10 @@ interface PermissionFlow {
          */
         @JvmStatic
         @JvmOverloads
-        fun init(context: Context, dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER) {
+        fun init(
+            context: Context,
+            dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER,
+        ) {
             PermissionFlowImpl.init(context, dispatcher)
         }
 

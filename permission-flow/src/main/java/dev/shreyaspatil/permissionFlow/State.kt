@@ -29,7 +29,6 @@ data class PermissionState(val permission: String, val isGranted: Boolean)
  * @property permissions List of state of multiple permissions
  */
 data class MultiplePermissionState(val permissions: List<PermissionState>) {
-
     /**
      * Returns true if all permissions are granted by user
      */

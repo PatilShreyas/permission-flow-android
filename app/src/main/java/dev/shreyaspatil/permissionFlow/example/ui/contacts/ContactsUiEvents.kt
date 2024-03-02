@@ -17,9 +17,9 @@ package dev.shreyaspatil.permissionFlow.example.ui.contacts
 
 import dev.shreyaspatil.permissionFlow.example.data.model.Contact
 
-sealed class ContactsUiState {
-    object ContactPermissionNotGranted : ContactsUiState()
-    object ContactPermissionGranted : ContactsUiState()
-    data class ContactsAvailable(val contacts: List<Contact>) : ContactsUiState()
-    data class Failure(val error: String) : ContactsUiState()
+sealed class ContactsUiEvents {
+    object ContactPermissionNotGranted : ContactsUiEvents()
+    object ContactPermissionGranted : ContactsUiEvents()
+    data class ContactsAvailable(val contacts: List<Contact>) : ContactsUiEvents()
+    data class Failure(val error: String) : ContactsUiEvents()
 }
