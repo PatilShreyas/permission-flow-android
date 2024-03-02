@@ -31,9 +31,8 @@ import kotlinx.coroutines.flow.onEach
 class ContactsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityContactsBinding
-    private val viewModel by viewModels<ContactsViewModel> {
-        ContactsViewModel.FactoryProvider(contentResolver).get()
-    }
+    private val viewModel by
+        viewModels<ContactsViewModel> { ContactsViewModel.FactoryProvider(contentResolver).get() }
 
     private val permissionLauncher = registerForPermissionFlowRequestsResult()
 
@@ -59,9 +58,8 @@ class ContactsActivity : AppCompatActivity() {
                 }
             }
             is ContactsUiEvents.ContactsAvailable -> {
-                binding.contactsDataText.text = state.contacts.joinToString("\n") {
-                    "${it.id}. ${it.name} (${it.number})"
-                }
+                binding.contactsDataText.text =
+                    state.contacts.joinToString("\n") { "${it.id}. ${it.name} (${it.number})" }
             }
             is ContactsUiEvents.Failure -> {
                 Toast.makeText(this, state.error, Toast.LENGTH_SHORT).show()
@@ -74,9 +72,6 @@ class ContactsActivity : AppCompatActivity() {
     }
 
     private fun observeStates() {
-        viewModel.state
-            .flowWithLifecycle(lifecycle)
-            .onEach { render(it) }
-            .launchIn(lifecycleScope)
+        viewModel.state.flowWithLifecycle(lifecycle).onEach { render(it) }.launchIn(lifecycleScope)
     }
 }

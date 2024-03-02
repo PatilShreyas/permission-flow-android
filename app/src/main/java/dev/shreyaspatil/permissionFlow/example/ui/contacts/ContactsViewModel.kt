@@ -69,9 +69,10 @@ class ContactsViewModel(
 
     class FactoryProvider(private val contentResolver: ContentResolver) {
         fun get(): ViewModelProvider.Factory {
-            val initializer = ViewModelInitializer(ContactsViewModel::class.java) {
-                ContactsViewModel(AndroidDefaultContactRepository(contentResolver))
-            }
+            val initializer =
+                ViewModelInitializer(ContactsViewModel::class.java) {
+                    ContactsViewModel(AndroidDefaultContactRepository(contentResolver))
+                }
             return ViewModelProvider.Factory.from(initializer)
         }
     }

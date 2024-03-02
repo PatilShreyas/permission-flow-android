@@ -289,9 +289,7 @@ class PermissionWatchmenTest {
         assertTrue(permissionFlow3.value.isGranted)
     }
 
-    /**
-     * Mocks permission state i.e. granted / denied.
-     */
+    /** Mocks permission state i.e. granted / denied. */
     private fun mockPermissions(vararg permissionStates: Pair<String, Boolean>) {
         mockkStatic(ContextCompat::checkSelfPermission)
         permissionStates.forEach { (permission, isGranted) ->
@@ -304,9 +302,7 @@ class PermissionWatchmenTest {
         }
     }
 
-    /**
-     * Mocks application's [activityForegroundEventFlow] with the specified [flow]
-     */
+    /** Mocks application's [activityForegroundEventFlow] with the specified [flow] */
     private fun mockActivityForegroundEventFlow(flow: Flow<Unit>) {
         mockkStatic(Application::activityForegroundEventFlow)
         every { application.activityForegroundEventFlow } returns flow

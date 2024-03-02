@@ -35,9 +35,8 @@ class AndroidDefaultContactRepository(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
 ) : ContactRepository {
 
-    override val allContacts: Flow<List<Contact>> = permissionFlow
-        .getPermissionState(Manifest.permission.READ_CONTACTS)
-        .transform { state ->
+    override val allContacts: Flow<List<Contact>> =
+        permissionFlow.getPermissionState(Manifest.permission.READ_CONTACTS).transform { state ->
             if (state.isGranted) {
                 emit(getContacts())
             } else {
@@ -45,46 +44,55 @@ class AndroidDefaultContactRepository(
             }
         }
 
-    private suspend fun getContacts(): List<Contact> = withContext(ioDispatcher) {
-        buildList {
-            var cursor: Cursor? = null
-            try {
-                val projection = arrayOf(
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                    ContactsContract.CommonDataKinds.Phone.NUMBER,
-                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                    ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
-                )
-
-                val order = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} ASC"
-
-                cursor = contentResolver.query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    projection,
-                    null,
-                    null,
-                    order,
-                )
-                if (cursor != null) {
-                    while (cursor.moveToNext()) {
-                        val contactId = cursor.getStringOrNull(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID),
-                        )
-                        val name = cursor.getStringOrNull(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME),
-                        )
-                        val number = cursor.getStringOrNull(
-                            cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER),
+    private suspend fun getContacts(): List<Contact> =
+        withContext(ioDispatcher) {
+            buildList {
+                var cursor: Cursor? = null
+                try {
+                    val projection =
+                        arrayOf(
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                            ContactsContract.CommonDataKinds.Phone.NUMBER,
+                            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.PHOTO_URI,
                         )
 
-                        if (contactId != null && name != null && number != null) {
-                            add(Contact(contactId, name, number))
+                    val order = "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} ASC"
+
+                    cursor =
+                        contentResolver.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            projection,
+                            null,
+                            null,
+                            order,
+                        )
+                    if (cursor != null) {
+                        while (cursor.moveToNext()) {
+                            val contactId =
+                                cursor.getStringOrNull(
+                                    cursor.getColumnIndex(
+                                        ContactsContract.CommonDataKinds.Phone.CONTACT_ID),
+                                )
+                            val name =
+                                cursor.getStringOrNull(
+                                    cursor.getColumnIndex(
+                                        ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME),
+                                )
+                            val number =
+                                cursor.getStringOrNull(
+                                    cursor.getColumnIndex(
+                                        ContactsContract.CommonDataKinds.Phone.NUMBER),
+                                )
+
+                            if (contactId != null && name != null && number != null) {
+                                add(Contact(contactId, name, number))
+                            }
                         }
                     }
+                } finally {
+                    cursor?.close()
                 }
-            } finally {
-                cursor?.close()
             }
         }
-    }
 }

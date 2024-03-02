@@ -24,9 +24,10 @@ class ActivityResultLauncherExtTest {
 
     @Test
     fun testLaunch() {
-        val activityResultLauncher: ActivityResultLauncher<Array<String>> = mockk(
-            relaxUnitFun = true,
-        )
+        val activityResultLauncher: ActivityResultLauncher<Array<String>> =
+            mockk(
+                relaxUnitFun = true,
+            )
 
         activityResultLauncher.launch("A", "B", "C")
 

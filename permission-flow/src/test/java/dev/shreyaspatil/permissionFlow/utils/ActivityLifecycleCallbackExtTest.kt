@@ -25,11 +25,11 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import java.lang.reflect.Field
+import java.lang.reflect.Modifier
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
-import java.lang.reflect.Field
-import java.lang.reflect.Modifier
 
 @Suppress("OPT_IN_IS_NOT_ENABLED")
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -37,11 +37,13 @@ class ActivityLifecycleCallbackExtTest {
 
     private val callbackSlot = slot<Application.ActivityLifecycleCallbacks>()
 
-    private val application: Application = mockk(relaxUnitFun = true) {
-        every { registerActivityLifecycleCallbacks(capture(callbackSlot)) } just Runs
-    }
+    private val application: Application =
+        mockk(relaxUnitFun = true) {
+            every { registerActivityLifecycleCallbacks(capture(callbackSlot)) } just Runs
+        }
 
-    private val lifecycleCallbacks get() = callbackSlot.captured
+    private val lifecycleCallbacks
+        get() = callbackSlot.captured
 
     @Test
     fun testRegisterUnregisterCallback() = runTest {
@@ -51,9 +53,7 @@ class ActivityLifecycleCallbackExtTest {
             }
             cancelAndIgnoreRemainingEvents()
         }
-        verify(exactly = 1) {
-            application.unregisterActivityLifecycleCallbacks(lifecycleCallbacks)
-        }
+        verify(exactly = 1) { application.unregisterActivityLifecycleCallbacks(lifecycleCallbacks) }
     }
 
     @Test
@@ -132,9 +132,7 @@ class ActivityLifecycleCallbackExtTest {
         }
     }
 
-    /**
-     * Activity factory function
-     */
+    /** Activity factory function */
     private fun activity(
         isChangingConfigurations: Boolean = false,
         isInMultiWindowMode: Boolean = false,
@@ -146,8 +144,8 @@ class ActivityLifecycleCallbackExtTest {
     }
 
     /**
-     * Some functionalities in the utility requires Android OS version above API 24.
-     * This utility function reflectively mocks OS version as specified [apiVersion]
+     * Some functionalities in the utility requires Android OS version above API 24. This utility
+     * function reflectively mocks OS version as specified [apiVersion]
      */
     private fun mockAndroidApiVersion(apiVersion: Int) {
         Build.VERSION::class.java.getDeclaredField("SDK_INT").apply {

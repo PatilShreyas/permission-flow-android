@@ -19,7 +19,10 @@ import dev.shreyaspatil.permissionFlow.example.data.model.Contact
 
 sealed class ContactsUiEvents {
     object ContactPermissionNotGranted : ContactsUiEvents()
+
     object ContactPermissionGranted : ContactsUiEvents()
+
     data class ContactsAvailable(val contacts: List<Contact>) : ContactsUiEvents()
+
     data class Failure(val error: String) : ContactsUiEvents()
 }
