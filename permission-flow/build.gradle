@@ -36,12 +36,6 @@ android {
 
     testOptions {
         unitTests.all {
-            if (name == "testDebugUnitTest") {
-                kover {
-                    disabled = false
-                    binaryReportFile.set(file("$buildDir/coverageReport/coverageReport.bin"))
-                }
-            }
         }
     }
     namespace 'dev.shreyaspatil.permissionFlow'
@@ -64,14 +58,18 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
 }
 
-tasks.koverHtmlReport {
-    enabled = true
-    htmlReportDir.set(layout.buildDirectory.dir("coverageReport/html"))
-}
-
-tasks.koverXmlReport {
-    enabled = true
-    xmlReportFile.set(layout.buildDirectory.file("coverageReport/report.xml"))
+koverReport {
+    androidReports("debug") {
+        xml {
+            reportFile = layout.buildDirectory.file("coverageReport/report.xml")
+        }
+        html {
+            reportDir = layout.buildDirectory.dir("coverageReport/html")
+        }
+        binary {
+            file =  layout.buildDirectory.file("coverageReport/coverageReport.bin")
+        }
+    }
 }
 
 dokkaHtml.configure {
