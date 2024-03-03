@@ -91,14 +91,14 @@ internal class ApplicationStateMonitor(private val application: Application) {
 
                     override fun onActivityPreCreated(
                         activity: Activity,
-                        savedInstanceState: Bundle?
+                        savedInstanceState: Bundle?,
                     ) {
                         currentActivity = WeakReference(activity)
                     }
 
                     override fun onActivityCreated(
                         activity: Activity,
-                        savedInstanceState: Bundle?
+                        savedInstanceState: Bundle?,
                     ) {
                         if (currentActivity?.get() != activity) {
                             currentActivity = WeakReference(activity)
@@ -136,7 +136,7 @@ internal class ApplicationStateMonitor(private val application: Application) {
 
                     override fun onActivitySaveInstanceState(
                         activity: Activity,
-                        outState: Bundle
+                        outState: Bundle,
                     ) {
                     }
 
@@ -150,7 +150,7 @@ internal class ApplicationStateMonitor(private val application: Application) {
                     @RequiresApi(Build.VERSION_CODES.N)
                     private fun isActivityResumedAfterMultiWindowOrPiPMode(activity: Activity) =
                         (wasInMultiWindowMode == true && !activity.isInMultiWindowMode) ||
-                                (wasInPictureInPictureMode == true && !activity.isInPictureInPictureMode)
+                            (wasInPictureInPictureMode == true && !activity.isInPictureInPictureMode)
                 }
 
             application.registerActivityLifecycleCallbacks(callback)

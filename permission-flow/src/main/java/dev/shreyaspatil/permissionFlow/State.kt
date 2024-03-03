@@ -25,7 +25,7 @@ package dev.shreyaspatil.permissionFlow
 data class PermissionState(
     val permission: String,
     val isGranted: Boolean,
-    val isRationaleRequired: Boolean?
+    val isRationaleRequired: Boolean?,
 )
 
 /**
