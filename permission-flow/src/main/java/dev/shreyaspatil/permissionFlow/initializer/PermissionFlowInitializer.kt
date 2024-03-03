@@ -19,11 +19,8 @@ import android.content.Context
 import androidx.startup.Initializer
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 
-/**
- * Initializes [PermissionFlow] instance on app startup.
- */
+/** Initializes [PermissionFlow] instance on app startup. */
 class PermissionFlowInitializer : Initializer<Unit> {
-
     override fun create(context: Context) {
         PermissionFlow.init(context)
         PermissionFlow.getInstance().startListening()

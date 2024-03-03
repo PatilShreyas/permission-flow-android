@@ -38,13 +38,14 @@ class MultiPermissionActivity : AppCompatActivity() {
 
     private val permissionLauncher = registerForPermissionFlowRequestsResult()
 
-    private val permissions = arrayOf(
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-        android.Manifest.permission.READ_CALL_LOG,
-        android.Manifest.permission.READ_CONTACTS,
-        android.Manifest.permission.READ_PHONE_STATE,
-    )
+    private val permissions =
+        arrayOf(
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.READ_CALL_LOG,
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.READ_PHONE_STATE,
+        )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,13 +57,13 @@ class MultiPermissionActivity : AppCompatActivity() {
     }
 
     private fun initViews() {
-        binding.buttonAskPermission.setOnClickListener {
-            permissionLauncher.launch(permissions)
-        }
+        binding.buttonAskPermission.setOnClickListener { permissionLauncher.launch(permissions) }
     }
 
     private fun observePermissions() {
-        permissionFlow.getMultiplePermissionState(*permissions) // or use `getPermissionState()` for observing a single permission
+        permissionFlow
+            .getMultiplePermissionState(
+                *permissions) // or use `getPermissionState()` for observing a single permission
             .flowWithLifecycle(lifecycle)
             .onEach { onPermissionStateChange(it) }
             .launchIn(lifecycleScope)

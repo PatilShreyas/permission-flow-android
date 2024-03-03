@@ -27,17 +27,20 @@ import dev.shreyaspatil.permissionFlow.example.databinding.ViewFragmentExampleBi
 import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsResult
 import kotlinx.coroutines.launch
 
+@Suppress("ktlint:standard:property-naming")
 class ExampleFragment : Fragment() {
 
     private var _binding: ViewFragmentExampleBinding? = null
-    private val binding: ViewFragmentExampleBinding get() = _binding!!
+    private val binding: ViewFragmentExampleBinding
+        get() = _binding!!
 
-    private val permissions = arrayOf(
-        android.Manifest.permission.CAMERA,
-        android.Manifest.permission.READ_CALL_LOG,
-        android.Manifest.permission.READ_CONTACTS,
-        android.Manifest.permission.READ_PHONE_STATE,
-    )
+    private val permissions =
+        arrayOf(
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.READ_CALL_LOG,
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.READ_PHONE_STATE,
+        )
 
     private val permissionFlow = PermissionFlow.getInstance()
 
@@ -59,22 +62,22 @@ class ExampleFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.button.setOnClickListener {
-            permissionLauncher.launch(permissions)
-        }
+        binding.button.setOnClickListener { permissionLauncher.launch(permissions) }
     }
 
     private fun observePermissions() {
         viewLifecycleOwner.lifecycleScope.launch {
             permissionFlow.getMultiplePermissionState(*permissions).collect {
-                val grantedPermissionsText = it.grantedPermissions.joinToString(
-                    separator = "\n",
-                    prefix = "Granted Permissions:\n",
-                )
-                val deniedPermissionsText = it.deniedPermissions.joinToString(
-                    separator = "\n",
-                    prefix = "Denied Permissions:\n",
-                )
+                val grantedPermissionsText =
+                    it.grantedPermissions.joinToString(
+                        separator = "\n",
+                        prefix = "Granted Permissions:\n",
+                    )
+                val deniedPermissionsText =
+                    it.deniedPermissions.joinToString(
+                        separator = "\n",
+                        prefix = "Denied Permissions:\n",
+                    )
 
                 binding.grantedPermissionsText.text = grantedPermissionsText
                 binding.deniedPermissionsText.text = deniedPermissionsText

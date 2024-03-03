@@ -23,37 +23,36 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 /**
- * [StateFlow] which delegates [flow] to use it as StateFlow and uses [getValue] to calculate
- * value at the instant.
+ * [StateFlow] which delegates [flow] to use it as StateFlow and uses [getValue] to calculate value
+ * at the instant.
  */
 private class CombinedStateFlow<T>(
     private val getValue: () -> T,
     private val flow: Flow<T>,
 ) : StateFlow<T> {
+    override val replayCache: List<T>
+        get() = listOf(value)
 
-    override val replayCache: List<T> get() = listOf(value)
+    override val value: T
+        get() = getValue()
 
-    override val value: T get() = getValue()
-
-    override suspend fun collect(collector: FlowCollector<T>): Nothing =
-        coroutineScope { flow.stateIn(this).collect(collector) }
+    override suspend fun collect(collector: FlowCollector<T>): Nothing = coroutineScope {
+        flow.stateIn(this).collect(collector)
+    }
 }
 
-/**
- * Returns implementation of [CombinedStateFlow]
- */
+/** Returns implementation of [CombinedStateFlow] */
 internal fun <T> combineStates(
     getValue: () -> T,
     flow: Flow<T>,
 ): StateFlow<T> = CombinedStateFlow(getValue, flow)
 
-/**
- * Combines multiple [StateFlow]s and transforms them into another [StateFlow]
- */
+/** Combines multiple [StateFlow]s and transforms them into another [StateFlow] */
 internal inline fun <reified T, R> combineStates(
     vararg stateFlows: StateFlow<T>,
     crossinline transform: (Array<T>) -> R,
-): StateFlow<R> = combineStates(
-    getValue = { transform(stateFlows.map { it.value }.toTypedArray()) },
-    flow = combine(*stateFlows) { transform(it) },
-)
+): StateFlow<R> =
+    combineStates(
+        getValue = { transform(stateFlows.map { it.value }.toTypedArray()) },
+        flow = combine(*stateFlows) { transform(it) },
+    )
