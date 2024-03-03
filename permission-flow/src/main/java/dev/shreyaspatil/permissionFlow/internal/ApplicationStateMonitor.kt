@@ -163,8 +163,5 @@ internal class ApplicationStateMonitor(private val application: Application) {
         }
 
     @VisibleForTesting
-    fun getCurrentActivity() = currentActivity?.get()
-
-    @VisibleForTesting
-    fun getCurrentActivityAsWeakRef() = currentActivity
+    fun getCurrentActivityReference() = currentActivity
 }
