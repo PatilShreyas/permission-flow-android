@@ -20,9 +20,9 @@ import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.getInstance
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.init
 import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
-import java.util.concurrent.Executors
+import kotlinx.coroutines.newFixedThreadPoolContext
 
 /**
  * A utility class which provides a functionality for observing state of a permission (whether it's
@@ -180,7 +180,8 @@ interface PermissionFlow {
      * getting instance.
      */
     companion object {
-        private val DEFAULT_DISPATCHER = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
+        @OptIn(DelicateCoroutinesApi::class)
+        private val DEFAULT_DISPATCHER = newFixedThreadPoolContext(2, "PermissionFlow")
 
         /**
          * Initializes this [PermissionFlow] instance with specified arguments.
