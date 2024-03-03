@@ -22,6 +22,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -40,8 +41,8 @@ class PermissionFlowImplTest {
     @Test
     fun testGetPermissionState() {
         // Given: Permission flow
-        val expectedFlow = MutableStateFlow(PermissionState("A", true))
-        every { watchmen.watch("A") } returns expectedFlow
+        val expectedFlow = MutableStateFlow(PermissionState("A", true, false))
+        every { watchmen.watchState("A") } returns expectedFlow
 
         // When: Flow for any permission is retrieved
         val actualFlow = permissionFlow.getPermissionState("A")
@@ -51,10 +52,23 @@ class PermissionFlowImplTest {
     }
 
     @Test
+    fun testGetPermissionEvent() {
+        // Given: Permission flow
+        val expectedFlow = flow<PermissionState> {}
+        every { watchmen.watchStateEvents("A") } returns expectedFlow
+
+        // When: Flow for any permission is retrieved
+        val actualFlow = permissionFlow.getPermissionEvent("A")
+
+        // Then: Correct flow should be returned
+        assertEquals(expectedFlow, actualFlow)
+    }
+
+    @Test
     fun testGetMultiplePermissionState() {
         // Given: Permission flow
         val expectedFlow = MutableStateFlow(MultiplePermissionState(emptyList()))
-        every { watchmen.watchMultiple(arrayOf("A", "B")) } returns expectedFlow
+        every { watchmen.watchMultipleState(arrayOf("A", "B")) } returns expectedFlow
 
         // When: Flow for multiple permissions is retrieved
         val actualFlow = permissionFlow.getMultiplePermissionState("A", "B")
