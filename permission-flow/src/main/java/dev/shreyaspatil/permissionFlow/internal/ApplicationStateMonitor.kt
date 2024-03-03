@@ -76,20 +76,6 @@ internal class ApplicationStateMonitor(private val application: Application) {
                     private var wasInMultiWindowMode: Boolean? = null
                     private var wasInPictureInPictureMode: Boolean? = null
 
-                    /**
-                     * Whenever activity receives onStart() lifecycle callback, emit foreground event
-                     * only when activity hasn't changed configurations.
-                     */
-                    override fun onActivityStarted(activity: Activity) {
-                        if (isActivityChangingConfigurations == false) {
-                            trySend(Unit)
-                        }
-                    }
-
-                    override fun onActivityStopped(activity: Activity) {
-                        isActivityChangingConfigurations = activity.isChangingConfigurations
-                    }
-
                     override fun onActivityPreCreated(
                         activity: Activity,
                         savedInstanceState: Bundle?,
@@ -104,6 +90,20 @@ internal class ApplicationStateMonitor(private val application: Application) {
                         if (currentActivity?.get() != activity) {
                             currentActivity = WeakReference(activity)
                         }
+                    }
+
+                    /**
+                     * Whenever activity receives onStart() lifecycle callback, emit foreground event
+                     * only when activity hasn't changed configurations.
+                     */
+                    override fun onActivityStarted(activity: Activity) {
+                        if (isActivityChangingConfigurations == false) {
+                            trySend(Unit)
+                        }
+                    }
+
+                    override fun onActivityStopped(activity: Activity) {
+                        isActivityChangingConfigurations = activity.isChangingConfigurations
                     }
 
                     /**
@@ -164,4 +164,7 @@ internal class ApplicationStateMonitor(private val application: Application) {
 
     @VisibleForTesting
     fun getCurrentActivity() = currentActivity?.get()
+
+    @VisibleForTesting
+    fun getCurrentActivityAsWeakRef() = currentActivity
 }
