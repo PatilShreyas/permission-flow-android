@@ -27,10 +27,10 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
-/**
- * Default implementation of a [PermissionFlow]
- */
-internal class PermissionFlowImpl @VisibleForTesting constructor(
+/** Default implementation of a [PermissionFlow] */
+internal class PermissionFlowImpl
+@VisibleForTesting
+constructor(
     private val watchmen: PermissionWatchmen,
 ) : PermissionFlow {
 
@@ -42,7 +42,9 @@ internal class PermissionFlowImpl @VisibleForTesting constructor(
         return watchmen.watchStateEvents(permission)
     }
 
-    override fun getMultiplePermissionState(vararg permissions: String): StateFlow<MultiplePermissionState> {
+    override fun getMultiplePermissionState(
+        vararg permissions: String
+    ): StateFlow<MultiplePermissionState> {
         return watchmen.watchMultipleState(permissions.toList().toTypedArray())
     }
 
@@ -67,10 +69,11 @@ internal class PermissionFlowImpl @VisibleForTesting constructor(
         fun init(context: Context, dispatcher: CoroutineDispatcher) {
             if (instance == null) {
                 val monitor = ApplicationStateMonitor(context.applicationContext as Application)
-                val watchmen = PermissionWatchmen(
-                    appStateMonitor = monitor,
-                    dispatcher = dispatcher,
-                )
+                val watchmen =
+                    PermissionWatchmen(
+                        appStateMonitor = monitor,
+                        dispatcher = dispatcher,
+                    )
                 instance = PermissionFlowImpl(watchmen)
             }
         }

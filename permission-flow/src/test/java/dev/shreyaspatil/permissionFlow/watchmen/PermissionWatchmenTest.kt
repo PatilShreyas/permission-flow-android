@@ -47,13 +47,11 @@ class PermissionWatchmenTest {
 
     @Before
     fun setUp() {
-        foregroundEvents = MutableSharedFlow(
-            extraBufferCapacity = 1,
-            onBufferOverflow = BufferOverflow.DROP_OLDEST
-        )
-        applicationStateMonitor = mockk(relaxed = true) {
-            every { activityForegroundEvents } returns foregroundEvents
-        }
+        foregroundEvents =
+            MutableSharedFlow(
+                extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+        applicationStateMonitor =
+            mockk(relaxed = true) { every { activityForegroundEvents } returns foregroundEvents }
         watchmen = PermissionWatchmen(applicationStateMonitor, dispatcher)
     }
 
@@ -376,21 +374,18 @@ class PermissionWatchmenTest {
         assertTrue(permissionFlow3.value.isGranted)
     }
 
-    /**
-     * Mocks permission state i.e. granted / denied.
-     */
+    /** Mocks permission state i.e. granted / denied. */
     private fun mockPermissions(vararg permissionStates: Pair<String, Boolean>) {
         permissionStates.forEach { (permission, isGranted) ->
-            every { applicationStateMonitor.getPermissionState(permission) } returns PermissionState(
-                permission = permission,
-                isGranted = isGranted,
-                isRationaleRequired = false
-            )
+            every { applicationStateMonitor.getPermissionState(permission) } returns
+                PermissionState(
+                    permission = permission, isGranted = isGranted, isRationaleRequired = false)
         }
     }
 
-    private fun runTest(testBody: suspend TestScope.() -> Unit) = runTest(
-        context = dispatcher,
-        testBody = testBody,
-    )
+    private fun runTest(testBody: suspend TestScope.() -> Unit) =
+        runTest(
+            context = dispatcher,
+            testBody = testBody,
+        )
 }

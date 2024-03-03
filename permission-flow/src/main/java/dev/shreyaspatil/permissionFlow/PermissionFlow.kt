@@ -39,14 +39,14 @@ import kotlinx.coroutines.newFixedThreadPoolContext
  *
  * **1. Initialization**
  *
- *```
+ * ```
  *  class MyApplication: Application() {
  *      override fun onCreate() {
  *          super.onCreate()
  *          PermissionFlow.init(this)
  *      }
  *  }
- *```
+ * ```
  *
  * **2. Observing permission**
  *
@@ -67,7 +67,7 @@ import kotlinx.coroutines.newFixedThreadPoolContext
  *              }
  *      }
  *  }
- *```
+ * ```
  *
  * **3. Launching permission**
  *
@@ -89,11 +89,10 @@ interface PermissionFlow {
     /**
      * Returns [StateFlow] for a given [permission]
      *
-     * @param permission Unique permission identity
-     * (for e.g. [android.Manifest.permission.READ_CONTACTS])
+     * @param permission Unique permission identity (for e.g.
+     *   [android.Manifest.permission.READ_CONTACTS])
      *
      * Example:
-     *
      * ```
      *  permissionFlow.getPermissionState(android.Manifest.permission.READ_CONTACTS)
      *      .collect { state ->
@@ -115,11 +114,10 @@ interface PermissionFlow {
      * Flow will emit [PermissionState] whenever the state of permission is changed after collecting
      * this flow. Initial state of permission won't be emitted.
      *
-     * @param permission Unique permission identity
-     * (for e.g. [android.Manifest.permission.READ_CONTACTS])
+     * @param permission Unique permission identity (for e.g.
+     *   [android.Manifest.permission.READ_CONTACTS])
      *
      * Example:
-     *
      * ```
      *  permissionFlow.getPermissionEvent(android.Manifest.permission.READ_CONTACTS)
      *      .collect { state ->
@@ -138,11 +136,10 @@ interface PermissionFlow {
     /**
      * Returns [StateFlow] of a combining state for [permissions]
      *
-     * @param permissions List of permissions
-     * (for e.g. [android.Manifest.permission.READ_CONTACTS], [android.Manifest.permission.READ_SMS])
+     * @param permissions List of permissions (for e.g. [android.Manifest.permission.READ_CONTACTS],
+     *   [android.Manifest.permission.READ_SMS])
      *
      * Example:
-     *
      * ```
      *  permissionFlow.getMultiplePermissionState(
      *      android.Manifest.permission.READ_CONTACTS,
@@ -165,16 +162,16 @@ interface PermissionFlow {
     fun getMultiplePermissionState(vararg permissions: String): StateFlow<MultiplePermissionState>
 
     /**
-     * This helps to check if specified [permissions] are changed and it verifies it and updates
-     * the state of permissions which are being observed via [getMultiplePermissionState] method.
+     * This helps to check if specified [permissions] are changed and it verifies it and updates the
+     * state of permissions which are being observed via [getMultiplePermissionState] method.
      *
      * This can be useful when you are not using result launcher which is provided with this library
      * and manually handling permission request and want to update the state of permission in this
      * library so that flows which are being observed should get an updated state.
      *
-     * If [stopListening] is called earlier and hasn't started listening again, notifying
-     * permission doesn't work. Its new state is automatically calculated after starting
-     * listening to states again by calling [startListening] method.
+     * If [stopListening] is called earlier and hasn't started listening again, notifying permission
+     * doesn't work. Its new state is automatically calculated after starting listening to states
+     * again by calling [startListening] method.
      *
      * Example usage:
      *
@@ -197,16 +194,16 @@ interface PermissionFlow {
     /**
      * Starts listening the changes of state of permissions.
      *
-     * Ideally it automatically starts listening lazily when [getMultiplePermissionState] method is used for the first
-     * time. But this can be used to start to listen again after stopping listening
-     * with [stopListening].
+     * Ideally it automatically starts listening lazily when [getMultiplePermissionState] method is
+     * used for the first time. But this can be used to start to listen again after stopping
+     * listening with [stopListening].
      */
     fun startListening()
 
     /**
-     * Stops listening to the state changes of permissions throughout the application.
-     * This means the state of permission retrieved with [getMultiplePermissionState] method will not be updated after
-     * stopping listening. To start to listen again, use [startListening] method.
+     * Stops listening to the state changes of permissions throughout the application. This means
+     * the state of permission retrieved with [getMultiplePermissionState] method will not be
+     * updated after stopping listening. To start to listen again, use [startListening] method.
      */
     fun stopListening()
 
@@ -222,8 +219,8 @@ interface PermissionFlow {
          * Initializes this [PermissionFlow] instance with specified arguments.
          *
          * @param context The Android's [Context]. Application context is recommended.
-         * @param dispatcher Coroutine dispatcher to be used in the [PermissionFlow]. By default,
-         * it utilizes dispatcher having fixed two number of threads.
+         * @param dispatcher Coroutine dispatcher to be used in the [PermissionFlow]. By default, it
+         *   utilizes dispatcher having fixed two number of threads.
          */
         @JvmStatic
         @JvmOverloads
@@ -234,12 +231,13 @@ interface PermissionFlow {
         /**
          * Returns an instance with default implementation of [PermissionFlow].
          *
-         * @throws IllegalStateException If method [init] is not called before using this method.
-         *
          * @return Instance of [PermissionFlow].
+         * @throws IllegalStateException If method [init] is not called before using this method.
          */
         @JvmStatic
-        fun getInstance(): PermissionFlow = PermissionFlowImpl.instance
-            ?: error("Failed to create instance of PermissionFlow. Did you forget to call `PermissionFlow.init(context)`?")
+        fun getInstance(): PermissionFlow =
+            PermissionFlowImpl.instance
+                ?: error(
+                    "Failed to create instance of PermissionFlow. Did you forget to call `PermissionFlow.init(context)`?")
     }
 }

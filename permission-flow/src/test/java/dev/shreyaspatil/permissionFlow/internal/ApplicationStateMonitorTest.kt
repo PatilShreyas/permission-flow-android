@@ -47,13 +47,15 @@ class ApplicationStateMonitorTest {
 
     private lateinit var application: Application
     private val callbackSlot = slot<Application.ActivityLifecycleCallbacks>()
-    private val lifecycleCallbacks get() = callbackSlot.captured
+    private val lifecycleCallbacks
+        get() = callbackSlot.captured
 
     @Before
     fun setUp() {
-        application = mockk(relaxUnitFun = true) {
-            every { registerActivityLifecycleCallbacks(capture(callbackSlot)) } just Runs
-        }
+        application =
+            mockk(relaxUnitFun = true) {
+                every { registerActivityLifecycleCallbacks(capture(callbackSlot)) } just Runs
+            }
         monitor = ApplicationStateMonitor(application)
     }
 
@@ -62,11 +64,8 @@ class ApplicationStateMonitorTest {
         // Given: No current activity
         val permission = "A"
         mockPermissions(permission to true)
-        val expectedPermissionState = PermissionState(
-            permission = permission,
-            isGranted = true,
-            isRationaleRequired = null
-        )
+        val expectedPermissionState =
+            PermissionState(permission = permission, isGranted = true, isRationaleRequired = null)
 
         // When: Permission state is retrieved
         val actualPermissionState = monitor.getPermissionState(permission)
@@ -80,11 +79,8 @@ class ApplicationStateMonitorTest {
         // Given: No current activity
         val permission = "A"
         mockPermissions(permission to false)
-        val expectedPermissionState = PermissionState(
-            permission = permission,
-            isGranted = false,
-            isRationaleRequired = null
-        )
+        val expectedPermissionState =
+            PermissionState(permission = permission, isGranted = false, isRationaleRequired = null)
 
         // When: Permission state is retrieved
         val actualPermissionState = monitor.getPermissionState(permission)
@@ -103,11 +99,9 @@ class ApplicationStateMonitorTest {
             val permission = "A"
             mockPermissions(permission to true)
             mockPermissionRationale(permission to false)
-            val expectedPermissionState = PermissionState(
-                permission = permission,
-                isGranted = true,
-                isRationaleRequired = false
-            )
+            val expectedPermissionState =
+                PermissionState(
+                    permission = permission, isGranted = true, isRationaleRequired = false)
 
             // When: Permission state is retrieved
             val actualPermissionState = monitor.getPermissionState(permission)
@@ -127,11 +121,9 @@ class ApplicationStateMonitorTest {
             val permission = "A"
             mockPermissions(permission to false)
             mockPermissionRationale(permission to true)
-            val expectedPermissionState = PermissionState(
-                permission = permission,
-                isGranted = false,
-                isRationaleRequired = true
-            )
+            val expectedPermissionState =
+                PermissionState(
+                    permission = permission, isGranted = false, isRationaleRequired = true)
 
             // When: Permission state is retrieved
             val actualPermissionState = monitor.getPermissionState(permission)
@@ -151,11 +143,9 @@ class ApplicationStateMonitorTest {
             val permission = "A"
             mockPermissions(permission to false)
             mockPermissionRationale(permission to true)
-            val expectedPermissionState = PermissionState(
-                permission = permission,
-                isGranted = false,
-                isRationaleRequired = true
-            )
+            val expectedPermissionState =
+                PermissionState(
+                    permission = permission, isGranted = false, isRationaleRequired = true)
 
             // When: Permission state is retrieved
             val actualPermissionState = monitor.getPermissionState(permission)
@@ -173,9 +163,7 @@ class ApplicationStateMonitorTest {
             }
             cancelAndIgnoreRemainingEvents()
         }
-        verify(exactly = 1) {
-            application.unregisterActivityLifecycleCallbacks(lifecycleCallbacks)
-        }
+        verify(exactly = 1) { application.unregisterActivityLifecycleCallbacks(lifecycleCallbacks) }
     }
 
     @Test
@@ -352,9 +340,7 @@ class ApplicationStateMonitorTest {
         }
     }
 
-    /**
-     * Activity factory function
-     */
+    /** Activity factory function */
     private fun activity(
         isChangingConfigurations: Boolean = false,
         isInMultiWindowMode: Boolean = false,
@@ -365,32 +351,25 @@ class ApplicationStateMonitorTest {
         every { isInPictureInPictureMode() } returns isInPictureInPictureMode
     }
 
-    /**
-     * Mocks permission state i.e. granted / denied.
-     */
+    /** Mocks permission state i.e. granted / denied. */
     private fun mockPermissions(vararg permissionStates: Pair<String, Boolean>) {
         mockkStatic(ContextCompat::checkSelfPermission)
         permissionStates.forEach { (permission, isGranted) ->
-            every { ContextCompat.checkSelfPermission(any(), permission) } returns if (isGranted) {
-                PackageManager.PERMISSION_GRANTED
-            } else {
-                PackageManager.PERMISSION_DENIED
-            }
+            every { ContextCompat.checkSelfPermission(any(), permission) } returns
+                if (isGranted) {
+                    PackageManager.PERMISSION_GRANTED
+                } else {
+                    PackageManager.PERMISSION_DENIED
+                }
         }
     }
 
-    /**
-     * Mocks permission rationale state i.e. should shown or not
-     */
+    /** Mocks permission rationale state i.e. should shown or not */
     private fun mockPermissionRationale(vararg permissionStates: Pair<String, Boolean>) {
         mockkStatic(ActivityCompat::shouldShowRequestPermissionRationale)
         permissionStates.forEach { (permission, shouldShow) ->
-            every {
-                ActivityCompat.shouldShowRequestPermissionRationale(
-                    any(),
-                    permission
-                )
-            } returns shouldShow
+            every { ActivityCompat.shouldShowRequestPermissionRationale(any(), permission) } returns
+                shouldShow
         }
     }
 }

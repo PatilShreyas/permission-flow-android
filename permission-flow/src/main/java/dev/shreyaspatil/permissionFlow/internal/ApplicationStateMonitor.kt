@@ -25,9 +25,9 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import dev.shreyaspatil.permissionFlow.PermissionState
+import java.lang.ref.WeakReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
-import java.lang.ref.WeakReference
 
 /**
  * Monitors the state of the application and provides information about the info and state of
@@ -36,26 +36,20 @@ import java.lang.ref.WeakReference
 internal class ApplicationStateMonitor(private val application: Application) {
     private var currentActivity: WeakReference<Activity>? = null
 
-    /**
-     * Returns the current state of the permission.
-     */
+    /** Returns the current state of the permission. */
     fun getPermissionState(permission: String): PermissionState {
         val isGranted = isPermissionGranted(permission)
         val isRationaleRequired = shouldShowPermissionRationale(permission)
         return PermissionState(permission, isGranted, isRationaleRequired)
     }
 
-    /**
-     * Returns whether the permission should show rationale or not.
-     */
+    /** Returns whether the permission should show rationale or not. */
     private fun shouldShowPermissionRationale(permission: String): Boolean? {
         val activity = currentActivity?.get() ?: return null
         return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)
     }
 
-    /**
-     * Returns whether the permission is granted or not.
-     */
+    /** Returns whether the permission is granted or not. */
     private fun isPermissionGranted(permission: String): Boolean {
         return ContextCompat.checkSelfPermission(
             application,
@@ -93,8 +87,8 @@ internal class ApplicationStateMonitor(private val application: Application) {
                     }
 
                     /**
-                     * Whenever activity receives onStart() lifecycle callback, emit foreground event
-                     * only when activity hasn't changed configurations.
+                     * Whenever activity receives onStart() lifecycle callback, emit foreground
+                     * event only when activity hasn't changed configurations.
                      */
                     override fun onActivityStarted(activity: Activity) {
                         if (isActivityChangingConfigurations == false) {
@@ -107,12 +101,12 @@ internal class ApplicationStateMonitor(private val application: Application) {
                     }
 
                     /**
-                     * Whenever application is resized after being in in PiP or multi-window mode, or
-                     * exits from these modes, onResumed() lifecycle callback is triggered.
+                     * Whenever application is resized after being in in PiP or multi-window mode,
+                     * or exits from these modes, onResumed() lifecycle callback is triggered.
                      *
-                     * Here we assume that user has changed permission from app settings after being in
-                     * PiP or multi-window mode. So whenever these modes are exited, emit foreground
-                     * event.
+                     * Here we assume that user has changed permission from app settings after being
+                     * in PiP or multi-window mode. So whenever these modes are exited, emit
+                     * foreground event.
                      */
                     override fun onActivityResumed(activity: Activity) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -138,8 +132,7 @@ internal class ApplicationStateMonitor(private val application: Application) {
                     override fun onActivitySaveInstanceState(
                         activity: Activity,
                         outState: Bundle,
-                    ) {
-                    }
+                    ) {}
 
                     override fun onActivityDestroyed(activity: Activity) {
                         if (activity == currentActivity?.get()) {
@@ -147,11 +140,14 @@ internal class ApplicationStateMonitor(private val application: Application) {
                         }
                     }
 
-                    /** Returns whether [activity] was previously in multi-window mode or PiP mode. */
+                    /**
+                     * Returns whether [activity] was previously in multi-window mode or PiP mode.
+                     */
                     @RequiresApi(Build.VERSION_CODES.N)
                     private fun isActivityResumedAfterMultiWindowOrPiPMode(activity: Activity) =
                         (wasInMultiWindowMode == true && !activity.isInMultiWindowMode) ||
-                            (wasInPictureInPictureMode == true && !activity.isInPictureInPictureMode)
+                            (wasInPictureInPictureMode == true &&
+                                !activity.isInPictureInPictureMode)
                 }
 
             application.registerActivityLifecycleCallbacks(callback)
@@ -162,6 +158,5 @@ internal class ApplicationStateMonitor(private val application: Application) {
             }
         }
 
-    @VisibleForTesting
-    fun getCurrentActivityReference() = currentActivity
+    @VisibleForTesting fun getCurrentActivityReference() = currentActivity
 }
