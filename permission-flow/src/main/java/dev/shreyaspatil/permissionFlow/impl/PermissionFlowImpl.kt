@@ -24,6 +24,7 @@ import dev.shreyaspatil.permissionFlow.PermissionState
 import dev.shreyaspatil.permissionFlow.internal.ApplicationStateMonitor
 import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -37,8 +38,16 @@ internal class PermissionFlowImpl @VisibleForTesting constructor(
         return watchmen.watch(permission)
     }
 
+    override fun getPermissionEvent(permission: String): Flow<PermissionState> {
+        return watchmen.watchStateEvents(permission)
+    }
+
     override fun getMultiplePermissionState(vararg permissions: String): StateFlow<MultiplePermissionState> {
         return watchmen.watchMultiple(permissions.toList().toTypedArray())
+    }
+
+    override fun getMultiplePermissionEvent(vararg permissions: String): Flow<MultiplePermissionState> {
+        return watchmen.watchMultipleStateEvents(permissions.toList().toTypedArray())
     }
 
     override fun notifyPermissionsChanged(vararg permissions: String) {
