@@ -49,4 +49,11 @@ data class MultiplePermissionState(val permissions: List<PermissionState>) {
      * List of permissions which are denied / not granted by user
      */
     val deniedPermissions by lazy { permissions.filter { !it.isGranted }.map { it.permission } }
+
+    /**
+     * List of permissions which are required to show rationale
+     */
+    val permissionsRequiringRationale by lazy {
+        permissions.filter { it.isRationaleRequired == true }.map { it.permission }
+    }
 }
