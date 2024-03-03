@@ -15,12 +15,9 @@
  */
 package dev.shreyaspatil.permissionFlow.watchmen
 
-import android.app.Application
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import dev.shreyaspatil.permissionFlow.MultiplePermissionState
 import dev.shreyaspatil.permissionFlow.PermissionState
-import dev.shreyaspatil.permissionFlow.utils.activityForegroundEventFlow
+import dev.shreyaspatil.permissionFlow.internal.ApplicationStateMonitor
 import dev.shreyaspatil.permissionFlow.utils.stateFlow.combineStates
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
@@ -33,7 +30,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -61,7 +57,7 @@ internal class PermissionWatchmen(
      */
     private val permissionFlows = mutableMapOf<String, PermissionStateFlowDelegate>()
 
-    private val permissionEvents = MutableSharedFlow<PermissionEvent>()
+    private val permissionEvents = MutableSharedFlow<PermissionState>()
 
     fun watch(permission: String): StateFlow<PermissionState> {
         // Wakeup watchmen if sleeping
@@ -84,12 +80,7 @@ internal class PermissionWatchmen(
     fun notifyPermissionsChanged(permissions: Array<String>) {
         watchmenScope.launch {
             permissions.forEach { permission ->
-                permissionEvents.emit(
-                    PermissionEvent(
-                        permission = permission,
-                        isGranted = isPermissionGranted(permission),
-                    ),
-                )
+                permissionEvents.emit(appStateMonitor.getPermissionState(permission))
             }
         }
     }
@@ -112,11 +103,9 @@ internal class PermissionWatchmen(
      */
     @Synchronized
     private fun getOrCreatePermissionStateFlow(permission: String): StateFlow<PermissionState> {
-        val delegate = permissionFlows[permission] ?: run {
-            val initialState = PermissionState(permission, isPermissionGranted(permission))
-            PermissionStateFlowDelegate(initialState).also { permissionFlows[permission] = it }
-        }
-        return delegate.state
+        return permissionFlows.getOrPut(permission) {
+            PermissionStateFlowDelegate(appStateMonitor.getPermissionState(permission))
+        }.state
     }
 
     /**
@@ -125,8 +114,8 @@ internal class PermissionWatchmen(
     private fun watchPermissionEvents() {
         if (watchEventsJob != null && watchEventsJob?.isActive == true) return
         watchEventsJob = watchmenScope.launch {
-            permissionEvents.collect { (permission, isGranted) ->
-                permissionFlows[permission]?.setState(PermissionState(permission, isGranted))
+            permissionEvents.collect {
+                permissionFlows[it.permission]?.setState(it)
             }
         }
     }
@@ -153,21 +142,6 @@ internal class PermissionWatchmen(
         notifyPermissionsChanged(permissionFlows.keys.toTypedArray())
     }
 
-    private fun isPermissionGranted(permission: String): Boolean {
-        return ContextCompat.checkSelfPermission(
-            application,
-            permission,
-        ) == PackageManager.PERMISSION_GRANTED
-    }
-
-    /**
-     * A event model for permission event.
-     *
-     * @property permission Name of a permission
-     * @property isGranted State of permission whether it's granted / denied
-     */
-    private data class PermissionEvent(val permission: String, val isGranted: Boolean)
-
     /**
      * A delegate for [MutableStateFlow] which creates flow for holding state of a permission.
      */
@@ -179,9 +153,5 @@ internal class PermissionWatchmen(
         fun setState(newState: PermissionState) {
             _state.value = newState
         }
-    }
-
-    companion object {
-        private const val DEFAULT_DEBOUNCE_FOR_ACTIVITY_CALLBACK = 5_000L
     }
 }
