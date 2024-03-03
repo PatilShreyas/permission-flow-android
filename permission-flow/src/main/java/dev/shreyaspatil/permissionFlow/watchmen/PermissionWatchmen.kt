@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -62,13 +61,13 @@ internal class PermissionWatchmen(
 
     private val permissionEvents = MutableSharedFlow<PermissionState>()
 
-    fun watch(permission: String): StateFlow<PermissionState> {
+    fun watchState(permission: String): StateFlow<PermissionState> {
         // Wakeup watchmen if sleeping
         wakeUp()
         return getOrCreatePermissionStateFlow(permission)
     }
 
-    fun watchMultiple(permissions: Array<String>): StateFlow<MultiplePermissionState> {
+    fun watchMultipleState(permissions: Array<String>): StateFlow<MultiplePermissionState> {
         // Wakeup watchmen if sleeping
         wakeUp()
 
@@ -81,21 +80,9 @@ internal class PermissionWatchmen(
     }
 
     fun watchStateEvents(permission: String): Flow<PermissionState> {
-        // Wakeup watchmen if sleeping
-        wakeUp()
+        // Add permission to state watchlist too
+        watchState(permission)
         return getPermissionEvent(permission)
-    }
-
-    fun watchMultipleStateEvents(permissions: Array<String>): Flow<MultiplePermissionState> {
-        // Wakeup watchmen if sleeping
-        wakeUp()
-
-        val permissionStates = permissions
-            .distinct()
-            .map { permission -> getPermissionEvent(permission) }
-            .toTypedArray()
-
-        return combine(*permissionStates) { MultiplePermissionState(it.toList()) }
     }
 
     fun notifyPermissionsChanged(permissions: Array<String>) {
