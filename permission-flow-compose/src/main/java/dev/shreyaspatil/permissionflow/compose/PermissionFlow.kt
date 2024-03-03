@@ -37,6 +37,9 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
  *      if (state.isGranted) {
  *          // Render something
  *      } else {
+ *          if (state.isRationaleRequired) {
+ *              // Show rationale
+ *          }
  *          // Render something else
  *      }
  *  }
