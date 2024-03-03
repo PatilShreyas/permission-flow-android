@@ -39,12 +39,12 @@ class RequestPermissionsContract(
 ) : ActivityResultContract<Array<String>, Map<String, Boolean>>() {
 
     override fun createIntent(context: Context, input: Array<String>): Intent {
-        return contract.createIntent(context, input ?: emptyArray())
+        return contract.createIntent(context, input)
     }
 
     override fun parseResult(resultCode: Int, intent: Intent?): Map<String, Boolean> {
         return contract.parseResult(resultCode, intent).also {
-            val permissions = it.keys.filterNotNull().toTypedArray()
+            val permissions = it.keys.toList().toTypedArray()
             permissionFlow.notifyPermissionsChanged(*permissions)
         }
     }
