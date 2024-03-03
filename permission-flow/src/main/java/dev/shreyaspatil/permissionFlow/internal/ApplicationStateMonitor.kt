@@ -21,6 +21,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.annotation.RequiresApi
+import androidx.annotation.VisibleForTesting
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import dev.shreyaspatil.permissionFlow.PermissionState
@@ -141,7 +142,7 @@ internal class ApplicationStateMonitor(private val application: Application) {
                     }
 
                     override fun onActivityDestroyed(activity: Activity) {
-                        if (activity != currentActivity?.get()) {
+                        if (activity == currentActivity?.get()) {
                             currentActivity?.clear()
                         }
                     }
@@ -160,4 +161,7 @@ internal class ApplicationStateMonitor(private val application: Application) {
                 application.unregisterActivityLifecycleCallbacks(callback)
             }
         }
+
+    @VisibleForTesting
+    fun getCurrentActivity() = currentActivity?.get()
 }
