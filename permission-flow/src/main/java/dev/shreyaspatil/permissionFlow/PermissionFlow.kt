@@ -165,41 +165,6 @@ interface PermissionFlow {
     fun getMultiplePermissionState(vararg permissions: String): StateFlow<MultiplePermissionState>
 
     /**
-     * Returns [Flow] of a combining state events for [permissions].
-     *
-     * Flow will emit [PermissionState] whenever the state of permission is changed after collecting
-     * this flow. Initial state of permission won't be emitted.
-     *
-     * @param permissions List of permissions
-     * (for e.g. [android.Manifest.permission.READ_CONTACTS], [android.Manifest.permission.READ_SMS])
-     *
-     * Example:
-     *
-     * ```
-     *  permissionFlow.getMultiplePermissionEvent(
-     *      android.Manifest.permission.READ_CONTACTS,
-     *      android.Manifest.permission.READ_SMS
-     *  ).collect { state ->
-     *      // All permission states
-     *      val allPermissions = state.permissions
-     *
-     *      // Check whether all permissions are granted
-     *      val allGranted = state.allGranted
-     *
-     *      // List of granted permissions
-     *      val grantedPermissions = state.grantedPermissions
-     *
-     *      // List of denied permissions
-     *      val deniedPermissions = state.deniedPermissions
-     *
-     *      // List of permissions requiring rationale
-     *      val permissionsRequiringRationale = state.permissionsRequiringRationale
-     *  }
-     * ```
-     */
-    fun getMultiplePermissionEvent(vararg permissions: String): Flow<MultiplePermissionState>
-
-    /**
      * This helps to check if specified [permissions] are changed and it verifies it and updates
      * the state of permissions which are being observed via [getMultiplePermissionState] method.
      *
