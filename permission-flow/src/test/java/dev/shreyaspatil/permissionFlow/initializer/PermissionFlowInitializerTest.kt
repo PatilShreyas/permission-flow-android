@@ -64,7 +64,7 @@ class PermissionFlowInitializerTest {
         verifySequence {
             PermissionFlow.init(context)
             PermissionFlow.getInstance()
-                permissionFlow.startListening()
+            permissionFlow.startListening()
         }
     }
 
