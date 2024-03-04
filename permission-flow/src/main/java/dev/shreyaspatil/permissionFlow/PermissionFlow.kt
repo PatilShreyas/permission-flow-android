@@ -194,9 +194,11 @@ interface PermissionFlow {
     /**
      * Starts listening the changes of state of permissions.
      *
-     * Ideally it automatically starts listening lazily when [getMultiplePermissionState] method is
-     * used for the first time. But this can be used to start to listen again after stopping
-     * listening with [stopListening].
+     * Ideally it automatically starts listening eagerly when application is started and created
+     * via [dev.shreyaspatil.permissionFlow.initializer.PermissionFlowInitializer]. If initializer
+     * is disabled, then starts listening lazily when [getPermissionState] [getPermissionEvent] or
+     * [getMultiplePermissionState] method is used for the first time. But this can be used to
+     * start to listen again after stopping listening with [stopListening].
      */
     fun startListening()
 
