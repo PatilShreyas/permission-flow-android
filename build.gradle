@@ -15,7 +15,7 @@ buildscript {
         mockkVersion = '1.13.10'
         turbineVersion = '1.0.0'
         spotlessVersion = '6.25.0'
-        koverVersion = "0.5.1"
+        koverVersion = "0.7.6"
         startupVersion = "1.1.1"
     }
 }
