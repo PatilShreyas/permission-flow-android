@@ -15,25 +15,35 @@
  */
 package dev.shreyaspatil.permissionFlow.initializer
 
-import android.app.Application
 import android.content.Context
+import android.os.Build
+import androidx.test.core.app.ApplicationProvider
 import dev.shreyaspatil.permissionFlow.PermissionFlow
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.verify
+import io.mockk.verifySequence
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.P])
 class PermissionFlowInitializerTest {
     private lateinit var initializer: PermissionFlowInitializer
+    private lateinit var permissionFlow: PermissionFlow
 
     @Before
     fun setUp() {
+        permissionFlow = mockk(relaxUnitFun = true)
         mockkObject(PermissionFlow)
+        every { PermissionFlow.getInstance() } returns permissionFlow
+
         initializer = PermissionFlowInitializer()
     }
 
@@ -45,13 +55,17 @@ class PermissionFlowInitializerTest {
     @Test
     fun testInitializer() {
         // Given: A application context providing context
-        val context = mockk<Context> { every { applicationContext } returns mockk<Application>() }
+        val context = ApplicationProvider.getApplicationContext<Context>()
 
         // When: Initializer is created
         initializer.create(context = context)
 
         // Then: Permission flow should be initialized
-        verify(exactly = 1) { PermissionFlow.init(context) }
+        verifySequence {
+            PermissionFlow.init(context)
+            PermissionFlow.getInstance()
+                permissionFlow.startListening()
+        }
     }
 
     @Test
