@@ -4,7 +4,7 @@ buildscript {
         agpVersion = '8.3.0'
         mavenPublishVersion = '0.27.0'
         kotlinVersion = '1.9.22'
-        dokkaVersion = '1.9.10'
+        dokkaVersion = '1.9.20'
         composeBomVersion = '2024.02.01'
         composeCompilerVersion = '1.5.10'
         activityVersion = '1.8.2'
