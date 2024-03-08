@@ -3,7 +3,7 @@ buildscript {
     ext {
         agpVersion = '8.3.0'
         mavenPublishVersion = '0.27.0'
-        kotlinVersion = '1.9.22'
+        kotlinVersion = '1.9.23'
         dokkaVersion = '1.9.20'
         composeBomVersion = '2024.02.02'
         composeCompilerVersion = '1.5.10'
