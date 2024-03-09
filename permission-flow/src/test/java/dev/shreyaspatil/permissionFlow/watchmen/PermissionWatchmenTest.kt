@@ -21,10 +21,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestScope
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -66,20 +64,6 @@ class PermissionWatchmenTest {
 
         // Then: StateFlow should be returned with valid value i.e. true (Granted).
         assertTrue(flow.value.isGranted)
-
-        // Then: Should start watching activity foreground events.
-        dispatcher.scheduler.runCurrent()
-        verify(exactly = 1) { applicationStateMonitor.activityForegroundEvents }
-        assertEquals(1, foregroundEvents.subscriptionCount.value)
-    }
-
-    @Test
-    fun shouldWakeUpAndReturnFlow_whenWatchPermissionEventForTheFirstTime() {
-        // Given: Permission
-        val permission = "permission"
-
-        // When: Starts watching permission for the first time.
-        val flow = watchmen.watchStateEvents(permission)
 
         // Then: Should start watching activity foreground events.
         dispatcher.scheduler.runCurrent()
@@ -153,44 +137,6 @@ class PermissionWatchmenTest {
     }
 
     @Test
-    fun shouldNotEmitCurrentState_whenEventIsWatched() = runTest {
-        // Given: Watching a permission flow as event and permission is not granted
-        val permission = "permission"
-        mockPermissions(permission to false)
-        watchmen.notifyPermissionsChanged(permissions = arrayOf(permission))
-
-        // When: Watching state event
-        val state = async { watchmen.watchStateEvents(permission).first() }
-        advanceUntilIdle()
-
-        // Then: Event should not be emitted with current value
-        assertTrue(state.isActive)
-
-        // When: Change in state is notified for the same permission
-        watchmen.notifyPermissionsChanged(permissions = arrayOf(permission))
-
-        // Then: Current value of flow should be false i.e. Not granted
-        assertEquals(permission, state.await().permission)
-        assertFalse(state.await().isGranted)
-    }
-
-    @Test
-    fun shouldEmitStateEvent_whenPermissionChangesAreNotified() = runTest {
-        // Given: Watching a permission flow as event
-        val permission = "permission"
-        val event = watchmen.watchStateEvents(permission)
-
-        // When: Change in state is notified for the same permission
-        mockPermissions(permission to false)
-        watchmen.notifyPermissionsChanged(permissions = arrayOf(permission))
-
-        // Then: Current value of flow should be false i.e. Not granted
-        val state = event.first()
-        assertEquals(permission, state.permission)
-        assertFalse(state.isGranted)
-    }
-
-    @Test
     fun shouldUpdateMultiplePermissionFlowState_whenPermissionChangesAreNotified() {
         // Given: Watching multiple permission state
         val permission1 = "permission-1"
@@ -226,24 +172,6 @@ class PermissionWatchmenTest {
     }
 
     @Test
-    fun shouldEmitPermissionFlowStateEvent_whenWatchmenWakesAfterSleeping() = runTest {
-        // Given: Watching a permission
-        val permission = "permission"
-        mockPermissions(permission to true)
-        val state = async { watchmen.watchStateEvents(permission).first() }
-        advanceUntilIdle()
-
-        // When: Watchmen sleeps, permission state changes and watchmen wakes after that
-        watchmen.sleep()
-        mockPermissions(permission to false)
-        watchmen.wakeUp()
-        advanceUntilIdle()
-
-        // Then: Permission state should be get updated
-        assertFalse(state.await().isGranted)
-    }
-
-    @Test
     fun shouldUpdateMultiplePermissionFlowState_whenWatchmenWakesAfterSleeping() {
         // Given: Watching multiple permissions
         val permission1 = "permission-1"
@@ -276,23 +204,6 @@ class PermissionWatchmenTest {
         // Then: Current value of flow should not be changed i.e. it should remain as Granted
         dispatcher.scheduler.runCurrent()
         assertTrue(flow.value.isGranted)
-    }
-
-    @Test
-    fun shouldEmitStateEvent_whenPermissionChangesAreNotifiedEvenIfWatchmenIsSleeping() = runTest {
-        // Given: Watching a permission flow events and watchmen is sleeping
-        val permission = "permission"
-        mockPermissions(permission to true)
-        val state = async { watchmen.watchStateEvents(permission).first() }
-        watchmen.sleep()
-
-        // When: Change in state is notified for the same permission
-        mockPermissions(permission to false)
-        watchmen.notifyPermissionsChanged(permissions = arrayOf(permission))
-        advanceUntilIdle()
-
-        // Then: Current value of flow should be changed
-        assertFalse(state.await().isGranted)
     }
 
     @Test

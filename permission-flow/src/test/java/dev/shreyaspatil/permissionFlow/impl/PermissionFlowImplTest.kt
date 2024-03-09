@@ -22,7 +22,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -45,19 +44,6 @@ class PermissionFlowImplTest {
 
         // When: Flow for any permission is retrieved
         val actualFlow = permissionFlow.getPermissionState("A")
-
-        // Then: Correct flow should be returned
-        assertEquals(expectedFlow, actualFlow)
-    }
-
-    @Test
-    fun testGetPermissionEvent() {
-        // Given: Permission flow
-        val expectedFlow = flow<PermissionState> {}
-        every { watchmen.watchStateEvents("A") } returns expectedFlow
-
-        // When: Flow for any permission is retrieved
-        val actualFlow = permissionFlow.getPermissionEvent("A")
 
         // Then: Correct flow should be returned
         assertEquals(expectedFlow, actualFlow)

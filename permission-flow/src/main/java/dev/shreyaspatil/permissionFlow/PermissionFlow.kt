@@ -21,7 +21,6 @@ import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.init
 import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.newFixedThreadPoolContext
 
@@ -107,31 +106,6 @@ interface PermissionFlow {
      * ```
      */
     fun getPermissionState(permission: String): StateFlow<PermissionState>
-
-    /**
-     * Returns [Flow] for a given [permission] events.
-     *
-     * Flow will emit [PermissionState] whenever the state of permission is changed after collecting
-     * this flow. Initial state of permission won't be emitted.
-     *
-     * @param permission Unique permission identity (for e.g.
-     *   [android.Manifest.permission.READ_CONTACTS])
-     *
-     * Example:
-     * ```
-     *  permissionFlow.getPermissionEvent(android.Manifest.permission.READ_CONTACTS)
-     *      .collect { state ->
-     *          if (state.isGranted) {
-     *              // Do something
-     *          } else {
-     *              if (state.isRationaleRequired) {
-     *                  // Do something
-     *              }
-     *          }
-     *      }
-     * ```
-     */
-    fun getPermissionEvent(permission: String): Flow<PermissionState>
 
     /**
      * Returns [StateFlow] of a combining state for [permissions]

@@ -22,16 +22,13 @@ import dev.shreyaspatil.permissionFlow.utils.stateFlow.combineStates
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancelChildren
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -72,12 +69,6 @@ internal class PermissionWatchmen(
         return combineStates(*permissionStates) { MultiplePermissionState(it.toList()) }
     }
 
-    fun watchStateEvents(permission: String): Flow<PermissionState> {
-        // Add permission to state watchlist too
-        watchState(permission)
-        return getPermissionEvent(permission)
-    }
-
     fun notifyPermissionsChanged(permissions: Array<String>) {
         watchmenScope.launch {
             permissions.forEach { permission ->
@@ -110,9 +101,6 @@ internal class PermissionWatchmen(
             }
             .state
     }
-
-    private fun getPermissionEvent(permission: String) =
-        permissionEvents.filter { it.permission == permission }
 
     /** Watches for the permission events and updates appropriate state holders of permission */
     private fun watchPermissionEvents() {

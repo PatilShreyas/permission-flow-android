@@ -24,7 +24,6 @@ import dev.shreyaspatil.permissionFlow.PermissionState
 import dev.shreyaspatil.permissionFlow.internal.ApplicationStateMonitor
 import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 /** Default implementation of a [PermissionFlow] */
@@ -36,10 +35,6 @@ constructor(
 
     override fun getPermissionState(permission: String): StateFlow<PermissionState> {
         return watchmen.watchState(permission)
-    }
-
-    override fun getPermissionEvent(permission: String): Flow<PermissionState> {
-        return watchmen.watchStateEvents(permission)
     }
 
     override fun getMultiplePermissionState(
