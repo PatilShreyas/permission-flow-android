@@ -19,8 +19,6 @@ import android.app.Application
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -39,14 +37,24 @@ class PermissionFlowTest {
     }
 
     @Test
-    fun testGetInstanceWithInit_shouldBeSingleInstanceAlways() = runTest {
+    fun testGetInstanceWithInit_shouldBeSingleInstanceAlways() {
+        // Init for the first time
+        initPermissionFlow()
+        // Get instance 1
+        val instance1 = PermissionFlow.getInstance()
+
+        // Init for the second time
+        initPermissionFlow()
+        // Get instance 2
+        val instance2 = PermissionFlow.getInstance()
+
+        // Both instances should be the same
+        assert(instance1 === instance2)
+    }
+
+    private fun initPermissionFlow() {
         PermissionFlow.init(
             mockk { every { applicationContext } returns mockk<Application>() },
         )
-
-        val instance1 = async { PermissionFlow.getInstance() }
-        val instance2 = async { PermissionFlow.getInstance() }
-
-        assert(instance1.await() === instance2.await())
     }
 }
