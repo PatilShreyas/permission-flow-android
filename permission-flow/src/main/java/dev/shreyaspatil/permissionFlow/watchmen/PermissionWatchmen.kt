@@ -128,7 +128,6 @@ internal class PermissionWatchmen(
      * going in settings) and recalculates state of the permissions which are currently being
      * observed.
      */
-    @OptIn(FlowPreview::class)
     private fun watchActivities() {
         if (watchActivityEventJob != null && watchActivityEventJob?.isActive == true) return
         watchActivityEventJob =
