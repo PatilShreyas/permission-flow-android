@@ -20,8 +20,13 @@ package dev.shreyaspatil.permissionFlow
  *
  * @property permission Name of a permission
  * @property isGranted State of a permission whether it's granted or not
+ * @property isRationaleRequired Whether to show rationale for a permission or not.
  */
-data class PermissionState(val permission: String, val isGranted: Boolean)
+data class PermissionState(
+    val permission: String,
+    val isGranted: Boolean,
+    val isRationaleRequired: Boolean?,
+)
 
 /**
  * State model for multiple permissions
@@ -37,4 +42,9 @@ data class MultiplePermissionState(val permissions: List<PermissionState>) {
 
     /** List of permissions which are denied / not granted by user */
     val deniedPermissions by lazy { permissions.filter { !it.isGranted }.map { it.permission } }
+
+    /** List of permissions which are required to show rationale */
+    val permissionsRequiringRationale by lazy {
+        permissions.filter { it.isRationaleRequired == true }.map { it.permission }
+    }
 }

@@ -23,6 +23,7 @@ import dev.shreyaspatil.permissionFlow.PermissionFlow
 class PermissionFlowInitializer : Initializer<Unit> {
     override fun create(context: Context) {
         PermissionFlow.init(context)
+        PermissionFlow.getInstance().startListening()
     }
 
     override fun dependencies(): List<Class<out Initializer<*>>> {

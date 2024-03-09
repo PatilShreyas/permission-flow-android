@@ -19,10 +19,10 @@ import android.content.Context
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.getInstance
 import dev.shreyaspatil.permissionFlow.PermissionFlow.Companion.init
 import dev.shreyaspatil.permissionFlow.impl.PermissionFlowImpl
-import java.util.concurrent.Executors
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.newFixedThreadPoolContext
 
 /**
  * A utility class which provides a functionality for observing state of a permission (whether it's
@@ -58,6 +58,10 @@ import kotlinx.coroutines.flow.StateFlow
  *              .collect { state ->
  *                  if (state.isGranted) {
  *                      // Do something
+ *                  } else {
+ *                      if (state.isRationaleRequired) {
+ *                          // Do something
+ *                      }
  *                  }
  *              }
  *      }
@@ -93,6 +97,10 @@ interface PermissionFlow {
      *      .collect { state ->
      *          if (state.isGranted) {
      *              // Do something
+     *          } else {
+     *              if (state.isRationaleRequired) {
+     *                  // Do something
+     *              }
      *          }
      *      }
      * ```
@@ -160,9 +168,11 @@ interface PermissionFlow {
     /**
      * Starts listening the changes of state of permissions.
      *
-     * Ideally it automatically starts listening lazily when [getMultiplePermissionState] method is
-     * used for the first time. But this can be used to start to listen again after stopping
-     * listening with [stopListening].
+     * Ideally it automatically starts listening eagerly when application is started and created via
+     * [dev.shreyaspatil.permissionFlow.initializer.PermissionFlowInitializer]. If initializer is
+     * disabled, then starts listening lazily when [getPermissionState] [getPermissionEvent] or
+     * [getMultiplePermissionState] method is used for the first time. But this can be used to start
+     * to listen again after stopping listening with [stopListening].
      */
     fun startListening()
 
@@ -178,7 +188,8 @@ interface PermissionFlow {
      * getting instance.
      */
     companion object {
-        private val DEFAULT_DISPATCHER = Executors.newFixedThreadPool(2).asCoroutineDispatcher()
+        @OptIn(DelicateCoroutinesApi::class)
+        private val DEFAULT_DISPATCHER = newFixedThreadPoolContext(2, "PermissionFlow")
 
         /**
          * Initializes this [PermissionFlow] instance with specified arguments.
@@ -189,10 +200,7 @@ interface PermissionFlow {
          */
         @JvmStatic
         @JvmOverloads
-        fun init(
-            context: Context,
-            dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER,
-        ) {
+        fun init(context: Context, dispatcher: CoroutineDispatcher = DEFAULT_DISPATCHER) {
             PermissionFlowImpl.init(context, dispatcher)
         }
 

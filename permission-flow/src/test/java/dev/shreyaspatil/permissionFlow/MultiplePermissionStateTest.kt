@@ -80,18 +80,31 @@ class MultiplePermissionStateTest {
         assertEquals(permissions.deniedPermissions, listOf("B", "D"))
     }
 
+    @Test
+    fun permissionsRequiringRationale_shouldReturnListOfDeniedPermissionsRequiringRationale() {
+        // When: Multiple permission state
+        val permissions =
+            multiplePermissionState(
+                grantedPermission("A"),
+                deniedPermission("B"),
+                grantedPermission("C"),
+                deniedPermissionRequiringRationale("D"),
+                deniedPermissionRequiringRationale("E"),
+            )
+
+        // Then: Permissions D and E should be present in permissions requiring rationale list
+        assertEquals(permissions.permissionsRequiringRationale, listOf("D", "E"))
+    }
+
     private fun multiplePermissionState(vararg permissionState: PermissionState) =
         MultiplePermissionState(permissionState.toList())
 
     private fun grantedPermission(permission: String) =
-        PermissionState(
-            permission = permission,
-            isGranted = true,
-        )
+        PermissionState(permission = permission, isGranted = true, isRationaleRequired = false)
 
     private fun deniedPermission(permission: String) =
-        PermissionState(
-            permission = permission,
-            isGranted = false,
-        )
+        PermissionState(permission = permission, isGranted = false, isRationaleRequired = null)
+
+    private fun deniedPermissionRequiringRationale(permission: String) =
+        PermissionState(permission = permission, isGranted = false, isRationaleRequired = true)
 }

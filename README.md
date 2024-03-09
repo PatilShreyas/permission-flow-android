@@ -53,9 +53,13 @@ val permissionFlow = PermissionFlow.getInstance()
 
 // Observe state of single permission
 suspend fun observePermission() {
-    permissionFlow.getPermissionState(android.Manifest.permission.READ_CONTACTS).collect { state ->
+    permissionFlow.getPermissionState(Manifest.permission.READ_CONTACTS).collect { state ->
         if (state.isGranted) {
-            // Do something
+            // Permission granted, access contacts.
+        } else if (state.isRationaleRequired == true) {
+            // Permission denied, but can be requested again
+        } else {
+            // Permission denied, and can't be requested again
         }
     }
 }
@@ -63,8 +67,8 @@ suspend fun observePermission() {
 // Observe state of multiple permissions
 suspend fun observeMultiplePermissions() {
     permissionFlow.getMultiplePermissionState(
-        android.Manifest.permission.READ_CONTACTS,
-        android.Manifest.permission.READ_SMS
+        Manifest.permission.READ_CONTACTS,
+        Manifest.permission.READ_SMS
     ).collect { state ->
         // All permission states
         val allPermissions = state.permissions
@@ -77,6 +81,9 @@ suspend fun observeMultiplePermissions() {
 
         // List of denied permissions
         val deniedPermissions = state.deniedPermissions
+        
+        // List of permissions requiring rationale
+        val permissionsRequiringRationale = state.permissionsRequiringRationale
     }
 }
 ```
@@ -90,9 +97,11 @@ State of a permission and state of multiple permissions can also be observed in 
 fun ExampleSinglePermission() {
     val state by rememberPermissionState(Manifest.permission.CAMERA)
     if (state.isGranted) {
-        // Render something
+        // Permission granted
+    } else if (state.isRationaleRequired == true) {
+        // Permission denied, but can be requested again
     } else {
-        // Render something else
+        // Permission denied, and can't be requested again
     }
 }
 
@@ -113,6 +122,9 @@ fun ExampleMultiplePermission() {
 
     val deniedPermissions = state.deniedPermissions
     // Do something with `deniedPermissions`
+    
+    val permissionsRequiringRationale = state.permissionsRequiringRationale
+    // Do something with `permissionsRequiringRationale`
 }
 ```
 
