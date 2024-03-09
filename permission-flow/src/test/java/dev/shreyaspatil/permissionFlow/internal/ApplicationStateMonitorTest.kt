@@ -302,6 +302,19 @@ class ApplicationStateMonitorTest {
     }
 
     @Test
+    @Config(sdk = [Build.VERSION_CODES.M])
+    fun shouldNotEmitEvent_whenActivityIsResumedAfterPaused_onAndroidM() = runTest {
+        monitor.activityForegroundEvents.test {
+            // Before onStart(), onStop() should be called first
+            lifecycleCallbacks.onActivityPaused(mockk())
+            lifecycleCallbacks.onActivityResumed(mockk())
+
+            // Event should get emitted
+            expectNoEvents()
+        }
+    }
+
+    @Test
     @Config(sdk = [Build.VERSION_CODES.N])
     fun shouldNotEmitEvent_whenActivityIsResumedButStillInMultiWindowMode() = runTest {
         monitor.activityForegroundEvents.test {
