@@ -70,7 +70,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (1/1)
+    (4/4)
   </span>
 </td>
 <td class="coverageStat">
@@ -78,7 +78,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (12/12)
+    (17/17)
   </span>
 </td>
 </tr>
@@ -112,31 +112,34 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">20</i>&nbsp; *
 <i class="no-highlight">21</i>&nbsp; * @property permission Name of a permission
 <i class="no-highlight">22</i>&nbsp; * @property isGranted State of a permission whether it&#39;s granted or not
-<i class="no-highlight">23</i>&nbsp; */
-<b class="fc"><i class="no-highlight">24</i>&nbsp;data class PermissionState(val permission: String, val isGranted: Boolean)</b>
-<i class="no-highlight">25</i>&nbsp;
-<i class="no-highlight">26</i>&nbsp;/**
-<i class="no-highlight">27</i>&nbsp; * State model for multiple permissions
-<i class="no-highlight">28</i>&nbsp; *
-<i class="no-highlight">29</i>&nbsp; * @property permissions List of state of multiple permissions
-<i class="no-highlight">30</i>&nbsp; */
-<i class="no-highlight">31</i>&nbsp;data class MultiplePermissionState(val permissions: List&lt;PermissionState&gt;) {
-<i class="no-highlight">32</i>&nbsp;
-<i class="no-highlight">33</i>&nbsp;    /**
-<i class="no-highlight">34</i>&nbsp;     * Returns true if all permissions are granted by user
-<i class="no-highlight">35</i>&nbsp;     */
-<i class="no-highlight">36</i>&nbsp;    val allGranted by lazy { permissions.all { it.isGranted } }
-<i class="no-highlight">37</i>&nbsp;
-<i class="no-highlight">38</i>&nbsp;    /**
-<i class="no-highlight">39</i>&nbsp;     * List of permissions which are granted by user
-<i class="no-highlight">40</i>&nbsp;     */
+<i class="no-highlight">23</i>&nbsp; * @property isRationaleRequired Whether to show rationale for a permission or not.
+<i class="no-highlight">24</i>&nbsp; */
+<b class="fc"><i class="no-highlight">25</i>&nbsp;data class PermissionState(</b>
+<b class="fc"><i class="no-highlight">26</i>&nbsp;    val permission: String,</b>
+<b class="fc"><i class="no-highlight">27</i>&nbsp;    val isGranted: Boolean,</b>
+<b class="fc"><i class="no-highlight">28</i>&nbsp;    val isRationaleRequired: Boolean?,</b>
+<i class="no-highlight">29</i>&nbsp;)
+<i class="no-highlight">30</i>&nbsp;
+<i class="no-highlight">31</i>&nbsp;/**
+<i class="no-highlight">32</i>&nbsp; * State model for multiple permissions
+<i class="no-highlight">33</i>&nbsp; *
+<i class="no-highlight">34</i>&nbsp; * @property permissions List of state of multiple permissions
+<i class="no-highlight">35</i>&nbsp; */
+<i class="no-highlight">36</i>&nbsp;data class MultiplePermissionState(val permissions: List&lt;PermissionState&gt;) {
+<i class="no-highlight">37</i>&nbsp;    /** Returns true if all permissions are granted by user */
+<i class="no-highlight">38</i>&nbsp;    val allGranted by lazy { permissions.all { it.isGranted } }
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    /** List of permissions which are granted by user */
 <i class="no-highlight">41</i>&nbsp;    val grantedPermissions by lazy { permissions.filter { it.isGranted }.map { it.permission } }
 <i class="no-highlight">42</i>&nbsp;
-<i class="no-highlight">43</i>&nbsp;    /**
-<i class="no-highlight">44</i>&nbsp;     * List of permissions which are denied / not granted by user
-<i class="no-highlight">45</i>&nbsp;     */
-<i class="no-highlight">46</i>&nbsp;    val deniedPermissions by lazy { permissions.filter { !it.isGranted }.map { it.permission } }
-<i class="no-highlight">47</i>&nbsp;}
+<i class="no-highlight">43</i>&nbsp;    /** List of permissions which are denied / not granted by user */
+<i class="no-highlight">44</i>&nbsp;    val deniedPermissions by lazy { permissions.filter { !it.isGranted }.map { it.permission } }
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;    /** List of permissions which are required to show rationale */
+<i class="no-highlight">47</i>&nbsp;    val permissionsRequiringRationale by lazy {
+<i class="no-highlight">48</i>&nbsp;        permissions.filter { it.isRationaleRequired == true }.map { it.permission }
+<i class="no-highlight">49</i>&nbsp;    }
+<i class="no-highlight">50</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -163,7 +166,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-05-22 14:18</div>
+    <div style="float:right;">generated on 2024-03-10 03:58</div>
 </div>
 </body>
 </html>

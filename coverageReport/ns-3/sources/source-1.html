@@ -94,7 +94,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (6/6)
+    (8/8)
   </span>
 </td>
 <td class="coverageStat">
@@ -102,7 +102,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (20/20)
+    (25/25)
   </span>
 </td>
   </tr>
@@ -129,7 +129,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (13/13)
+    (15/15)
   </span>
 </td>
 <td class="coverageStat">
@@ -137,7 +137,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (53/53)
+    (58/58)
   </span>
 </td>
 </tr>
@@ -171,54 +171,59 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">21</i>&nbsp;import dev.shreyaspatil.permissionFlow.MultiplePermissionState
 <i class="no-highlight">22</i>&nbsp;import dev.shreyaspatil.permissionFlow.PermissionFlow
 <i class="no-highlight">23</i>&nbsp;import dev.shreyaspatil.permissionFlow.PermissionState
-<i class="no-highlight">24</i>&nbsp;import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
-<i class="no-highlight">25</i>&nbsp;import kotlinx.coroutines.CoroutineDispatcher
-<i class="no-highlight">26</i>&nbsp;import kotlinx.coroutines.flow.StateFlow
-<i class="no-highlight">27</i>&nbsp;
-<i class="no-highlight">28</i>&nbsp;/**
-<i class="no-highlight">29</i>&nbsp; * Default implementation of a [PermissionFlow]
-<i class="no-highlight">30</i>&nbsp; */
-<b class="fc"><i class="no-highlight">31</i>&nbsp;internal class PermissionFlowImpl @VisibleForTesting constructor(</b>
-<b class="fc"><i class="no-highlight">32</i>&nbsp;    private val watchmen: PermissionWatchmen,</b>
-<i class="no-highlight">33</i>&nbsp;) : PermissionFlow {
-<i class="no-highlight">34</i>&nbsp;
-<i class="no-highlight">35</i>&nbsp;    override fun getPermissionState(permission: String): StateFlow&lt;PermissionState&gt; {
-<b class="fc"><i class="no-highlight">36</i>&nbsp;        return watchmen.watch(permission)</b>
-<i class="no-highlight">37</i>&nbsp;    }
-<i class="no-highlight">38</i>&nbsp;
-<i class="no-highlight">39</i>&nbsp;    override fun getMultiplePermissionState(vararg permissions: String): StateFlow&lt;MultiplePermissionState&gt; {
-<b class="fc"><i class="no-highlight">40</i>&nbsp;        return watchmen.watchMultiple(permissions.toList().toTypedArray())</b>
-<i class="no-highlight">41</i>&nbsp;    }
-<i class="no-highlight">42</i>&nbsp;
-<i class="no-highlight">43</i>&nbsp;    override fun notifyPermissionsChanged(vararg permissions: String) {
-<b class="fc"><i class="no-highlight">44</i>&nbsp;        watchmen.notifyPermissionsChanged(permissions.toList().toTypedArray())</b>
-<i class="no-highlight">45</i>&nbsp;    }
-<i class="no-highlight">46</i>&nbsp;
-<i class="no-highlight">47</i>&nbsp;    override fun startListening() {
-<b class="fc"><i class="no-highlight">48</i>&nbsp;        watchmen.wakeUp()</b>
-<i class="no-highlight">49</i>&nbsp;    }
-<i class="no-highlight">50</i>&nbsp;
-<i class="no-highlight">51</i>&nbsp;    override fun stopListening() {
-<b class="fc"><i class="no-highlight">52</i>&nbsp;        watchmen.sleep()</b>
-<i class="no-highlight">53</i>&nbsp;    }
-<i class="no-highlight">54</i>&nbsp;
-<i class="no-highlight">55</i>&nbsp;    internal companion object {
-<i class="no-highlight">56</i>&nbsp;        @Volatile
-<b class="fc"><i class="no-highlight">57</i>&nbsp;        var instance: PermissionFlowImpl? = null</b>
-<i class="no-highlight">58</i>&nbsp;            private set
-<i class="no-highlight">59</i>&nbsp;
-<i class="no-highlight">60</i>&nbsp;        @Synchronized
-<i class="no-highlight">61</i>&nbsp;        fun init(context: Context, dispatcher: CoroutineDispatcher) {
-<b class="fc"><i class="no-highlight">62</i>&nbsp;            if (instance == null) {</b>
-<b class="fc"><i class="no-highlight">63</i>&nbsp;                val watchmen = PermissionWatchmen(</b>
-<b class="fc"><i class="no-highlight">64</i>&nbsp;                    application = context.applicationContext as Application,</b>
-<b class="fc"><i class="no-highlight">65</i>&nbsp;                    dispatcher = dispatcher,</b>
-<i class="no-highlight">66</i>&nbsp;                )
-<b class="fc"><i class="no-highlight">67</i>&nbsp;                instance = PermissionFlowImpl(watchmen)</b>
-<i class="no-highlight">68</i>&nbsp;            }
-<i class="no-highlight">69</i>&nbsp;        }
-<i class="no-highlight">70</i>&nbsp;    }
-<i class="no-highlight">71</i>&nbsp;}
+<i class="no-highlight">24</i>&nbsp;import dev.shreyaspatil.permissionFlow.internal.ApplicationStateMonitor
+<i class="no-highlight">25</i>&nbsp;import dev.shreyaspatil.permissionFlow.watchmen.PermissionWatchmen
+<i class="no-highlight">26</i>&nbsp;import kotlinx.coroutines.CoroutineDispatcher
+<i class="no-highlight">27</i>&nbsp;import kotlinx.coroutines.flow.StateFlow
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;/** Default implementation of a [PermissionFlow] */
+<b class="fc"><i class="no-highlight">30</i>&nbsp;internal class PermissionFlowImpl</b>
+<i class="no-highlight">31</i>&nbsp;@VisibleForTesting
+<i class="no-highlight">32</i>&nbsp;constructor(
+<b class="fc"><i class="no-highlight">33</i>&nbsp;    private val watchmen: PermissionWatchmen,</b>
+<i class="no-highlight">34</i>&nbsp;) : PermissionFlow {
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    override fun getPermissionState(permission: String): StateFlow&lt;PermissionState&gt; {
+<b class="fc"><i class="no-highlight">37</i>&nbsp;        return watchmen.watchState(permission)</b>
+<i class="no-highlight">38</i>&nbsp;    }
+<i class="no-highlight">39</i>&nbsp;
+<i class="no-highlight">40</i>&nbsp;    override fun getMultiplePermissionState(
+<i class="no-highlight">41</i>&nbsp;        vararg permissions: String
+<i class="no-highlight">42</i>&nbsp;    ): StateFlow&lt;MultiplePermissionState&gt; {
+<b class="fc"><i class="no-highlight">43</i>&nbsp;        return watchmen.watchMultipleState(permissions.toList().toTypedArray())</b>
+<i class="no-highlight">44</i>&nbsp;    }
+<i class="no-highlight">45</i>&nbsp;
+<i class="no-highlight">46</i>&nbsp;    override fun notifyPermissionsChanged(vararg permissions: String) {
+<b class="fc"><i class="no-highlight">47</i>&nbsp;        watchmen.notifyPermissionsChanged(permissions.toList().toTypedArray())</b>
+<i class="no-highlight">48</i>&nbsp;    }
+<i class="no-highlight">49</i>&nbsp;
+<i class="no-highlight">50</i>&nbsp;    override fun startListening() {
+<b class="fc"><i class="no-highlight">51</i>&nbsp;        watchmen.wakeUp()</b>
+<i class="no-highlight">52</i>&nbsp;    }
+<i class="no-highlight">53</i>&nbsp;
+<i class="no-highlight">54</i>&nbsp;    override fun stopListening() {
+<b class="fc"><i class="no-highlight">55</i>&nbsp;        watchmen.sleep()</b>
+<i class="no-highlight">56</i>&nbsp;    }
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;    internal companion object {
+<i class="no-highlight">59</i>&nbsp;        @Volatile
+<b class="fc"><i class="no-highlight">60</i>&nbsp;        var instance: PermissionFlowImpl? = null</b>
+<i class="no-highlight">61</i>&nbsp;            private set
+<i class="no-highlight">62</i>&nbsp;
+<i class="no-highlight">63</i>&nbsp;        @Synchronized
+<i class="no-highlight">64</i>&nbsp;        fun init(context: Context, dispatcher: CoroutineDispatcher) {
+<b class="fc"><i class="no-highlight">65</i>&nbsp;            if (instance == null) {</b>
+<b class="fc"><i class="no-highlight">66</i>&nbsp;                val monitor = ApplicationStateMonitor(context.applicationContext as Application)</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;                val watchmen =</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;                    PermissionWatchmen(</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;                        appStateMonitor = monitor,</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;                        dispatcher = dispatcher,</b>
+<i class="no-highlight">71</i>&nbsp;                    )
+<b class="fc"><i class="no-highlight">72</i>&nbsp;                instance = PermissionFlowImpl(watchmen)</b>
+<i class="no-highlight">73</i>&nbsp;            }
+<i class="no-highlight">74</i>&nbsp;        }
+<i class="no-highlight">75</i>&nbsp;    }
+<i class="no-highlight">76</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -245,7 +250,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-05-22 14:18</div>
+    <div style="float:right;">generated on 2024-03-10 03:58</div>
 </div>
 </body>
 </html>

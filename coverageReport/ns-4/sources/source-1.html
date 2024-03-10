@@ -70,7 +70,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (3/3)
+    (4/4)
   </span>
 </td>
 <td class="coverageStat">
@@ -78,7 +78,7 @@ Current scope:     <a href="../../index.html">all classes</a>
     100%
   </span>
   <span class="absValue">
-    (9/9)
+    (12/12)
   </span>
 </td>
 </tr>
@@ -111,19 +111,17 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">19</i>&nbsp;import androidx.startup.Initializer
 <i class="no-highlight">20</i>&nbsp;import dev.shreyaspatil.permissionFlow.PermissionFlow
 <i class="no-highlight">21</i>&nbsp;
-<i class="no-highlight">22</i>&nbsp;/**
-<i class="no-highlight">23</i>&nbsp; * Initializes [PermissionFlow] instance on app startup.
-<i class="no-highlight">24</i>&nbsp; */
-<b class="fc"><i class="no-highlight">25</i>&nbsp;class PermissionFlowInitializer : Initializer&lt;Unit&gt; {</b>
-<i class="no-highlight">26</i>&nbsp;
-<i class="no-highlight">27</i>&nbsp;    override fun create(context: Context) {
-<b class="fc"><i class="no-highlight">28</i>&nbsp;        PermissionFlow.init(context)</b>
-<i class="no-highlight">29</i>&nbsp;    }
-<i class="no-highlight">30</i>&nbsp;
-<i class="no-highlight">31</i>&nbsp;    override fun dependencies(): List&lt;Class&lt;out Initializer&lt;*&gt;&gt;&gt; {
-<b class="fc"><i class="no-highlight">32</i>&nbsp;        return emptyList()</b>
-<i class="no-highlight">33</i>&nbsp;    }
-<i class="no-highlight">34</i>&nbsp;}
+<i class="no-highlight">22</i>&nbsp;/** Initializes [PermissionFlow] instance on app startup. */
+<b class="fc"><i class="no-highlight">23</i>&nbsp;class PermissionFlowInitializer : Initializer&lt;Unit&gt; {</b>
+<i class="no-highlight">24</i>&nbsp;    override fun create(context: Context) {
+<b class="fc"><i class="no-highlight">25</i>&nbsp;        PermissionFlow.init(context)</b>
+<b class="fc"><i class="no-highlight">26</i>&nbsp;        PermissionFlow.getInstance().startListening()</b>
+<i class="no-highlight">27</i>&nbsp;    }
+<i class="no-highlight">28</i>&nbsp;
+<i class="no-highlight">29</i>&nbsp;    override fun dependencies(): List&lt;Class&lt;out Initializer&lt;*&gt;&gt;&gt; {
+<b class="fc"><i class="no-highlight">30</i>&nbsp;        return emptyList()</b>
+<i class="no-highlight">31</i>&nbsp;    }
+<i class="no-highlight">32</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -150,7 +148,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-05-22 14:18</div>
+    <div style="float:right;">generated on 2024-03-10 03:58</div>
 </div>
 </body>
 </html>

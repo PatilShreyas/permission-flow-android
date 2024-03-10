@@ -115,32 +115,30 @@ Current scope:     <a href="../../index.html">all classes</a>
 <i class="no-highlight">23</i>&nbsp;import androidx.activity.result.contract.ActivityResultContracts
 <i class="no-highlight">24</i>&nbsp;import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 <i class="no-highlight">25</i>&nbsp;import dev.shreyaspatil.permissionFlow.PermissionFlow
-<i class="no-highlight">26</i>&nbsp;import dev.shreyaspatil.permissionFlow.utils.registerForPermissionFlowRequestsResult
-<i class="no-highlight">27</i>&nbsp;
-<i class="no-highlight">28</i>&nbsp;/**
-<i class="no-highlight">29</i>&nbsp; * An [ActivityResultContract] which delegates request and response to
-<i class="no-highlight">30</i>&nbsp; * [ActivityResultContracts.RequestMultiplePermissions] and silently notifies [PermissionFlow]
-<i class="no-highlight">31</i>&nbsp; * regarding state change of a permissions which are requested through [ActivityResultLauncher].
-<i class="no-highlight">32</i>&nbsp; *
-<i class="no-highlight">33</i>&nbsp; * Refer to [ComponentActivity.registerForPermissionFlowRequestsResult] for actual usage.
-<i class="no-highlight">34</i>&nbsp; */
-<i class="no-highlight">35</i>&nbsp;
-<i class="no-highlight">36</i>&nbsp;class RequestPermissionsContract(
-<b class="fc"><i class="no-highlight">37</i>&nbsp;    private val contract: RequestMultiplePermissions = RequestMultiplePermissions(),</b>
-<b class="fc"><i class="no-highlight">38</i>&nbsp;    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),</b>
-<b class="fc"><i class="no-highlight">39</i>&nbsp;) : ActivityResultContract&lt;Array&lt;String&gt;, Map&lt;String, Boolean&gt;&gt;() {</b>
-<i class="no-highlight">40</i>&nbsp;
-<i class="no-highlight">41</i>&nbsp;    override fun createIntent(context: Context, input: Array&lt;String&gt;): Intent {
-<b class="fc"><i class="no-highlight">42</i>&nbsp;        return contract.createIntent(context, input ?: emptyArray())</b>
-<i class="no-highlight">43</i>&nbsp;    }
-<i class="no-highlight">44</i>&nbsp;
-<i class="no-highlight">45</i>&nbsp;    override fun parseResult(resultCode: Int, intent: Intent?): Map&lt;String, Boolean&gt; {
-<b class="fc"><i class="no-highlight">46</i>&nbsp;        return contract.parseResult(resultCode, intent).also {</b>
-<b class="fc"><i class="no-highlight">47</i>&nbsp;            val permissions = it.keys.filterNotNull().toTypedArray()</b>
-<b class="fc"><i class="no-highlight">48</i>&nbsp;            permissionFlow.notifyPermissionsChanged(*permissions)</b>
-<b class="fc"><i class="no-highlight">49</i>&nbsp;        }</b>
-<i class="no-highlight">50</i>&nbsp;    }
-<i class="no-highlight">51</i>&nbsp;}
+<i class="no-highlight">26</i>&nbsp;
+<i class="no-highlight">27</i>&nbsp;/**
+<i class="no-highlight">28</i>&nbsp; * An [ActivityResultContract] which delegates request and response to
+<i class="no-highlight">29</i>&nbsp; * [ActivityResultContracts.RequestMultiplePermissions] and silently notifies [PermissionFlow]
+<i class="no-highlight">30</i>&nbsp; * regarding state change of a permissions which are requested through [ActivityResultLauncher].
+<i class="no-highlight">31</i>&nbsp; *
+<i class="no-highlight">32</i>&nbsp; * Refer to [ComponentActivity.registerForPermissionFlowRequestsResult] for actual usage.
+<i class="no-highlight">33</i>&nbsp; */
+<i class="no-highlight">34</i>&nbsp;class RequestPermissionsContract(
+<b class="fc"><i class="no-highlight">35</i>&nbsp;    private val contract: RequestMultiplePermissions = RequestMultiplePermissions(),</b>
+<b class="fc"><i class="no-highlight">36</i>&nbsp;    private val permissionFlow: PermissionFlow = PermissionFlow.getInstance(),</b>
+<b class="fc"><i class="no-highlight">37</i>&nbsp;) : ActivityResultContract&lt;Array&lt;String&gt;, Map&lt;String, Boolean&gt;&gt;() {</b>
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;    override fun createIntent(context: Context, input: Array&lt;String&gt;): Intent {
+<b class="fc"><i class="no-highlight">40</i>&nbsp;        return contract.createIntent(context, input)</b>
+<i class="no-highlight">41</i>&nbsp;    }
+<i class="no-highlight">42</i>&nbsp;
+<i class="no-highlight">43</i>&nbsp;    override fun parseResult(resultCode: Int, intent: Intent?): Map&lt;String, Boolean&gt; {
+<b class="fc"><i class="no-highlight">44</i>&nbsp;        return contract.parseResult(resultCode, intent).also {</b>
+<b class="fc"><i class="no-highlight">45</i>&nbsp;            val permissions = it.keys.toList().toTypedArray()</b>
+<b class="fc"><i class="no-highlight">46</i>&nbsp;            permissionFlow.notifyPermissionsChanged(*permissions)</b>
+<b class="fc"><i class="no-highlight">47</i>&nbsp;        }</b>
+<i class="no-highlight">48</i>&nbsp;    }
+<i class="no-highlight">49</i>&nbsp;}
 </div>
 </pre>
 </div>
@@ -167,7 +165,7 @@ Current scope:     <a href="../../index.html">all classes</a>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2023-05-22 14:18</div>
+    <div style="float:right;">generated on 2024-03-10 03:58</div>
 </div>
 </body>
 </html>
