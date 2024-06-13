@@ -5,7 +5,7 @@ buildscript {
         mavenPublishVersion = '0.27.0'
         kotlinVersion = '1.9.22'
         dokkaVersion = '1.9.20'
-        composeBomVersion = '2024.03.00'
+        composeBomVersion = '2024.06.00'
         composeCompilerVersion = '1.5.10'
         activityVersion = '1.8.2'
         coroutinesVersion = '1.8.0'
