@@ -18,6 +18,7 @@ package dev.shreyaspatil.permissionFlow.utils
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResultRegistry
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.Fragment
 import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
@@ -27,8 +28,34 @@ import io.mockk.verify
 import org.junit.Test
 
 class PermissionResultLauncherTest {
+
     @Test
-    fun test_Activity_registerForPermissionFlowRequestsResult() {
+    fun test_Activity_registerForPermissionFlowRequestsResult_default() {
+        val activityProvidedResultRegistry = mockk<ActivityResultRegistry>()
+        val activity =
+            mockk<ComponentActivity> {
+                every {
+                    registerForActivityResult(
+                        any<ActivityResultContract<Array<String>, Map<String, Boolean>>>(),
+                        any(),
+                        any<ActivityResultCallback<Map<String, Boolean>>>(),
+                    )
+                } returns mockk<ActivityResultLauncher<Array<String>>>()
+
+                every { activityResultRegistry } returns activityProvidedResultRegistry
+            }
+
+        activity.registerForPermissionFlowRequestsResult(mockk())
+
+        verify(exactly = 1) {
+            activity.registerForActivityResult(
+                any<RequestPermissionsContract>(), activityProvidedResultRegistry, any())
+        }
+    }
+
+    @Test
+    fun test_Activity_registerForPermissionFlowRequestsResult_withProvidedActivityResultRegistry() {
+        val activityResultRegistry = mockk<ActivityResultRegistry>()
         val activity =
             mockk<ComponentActivity> {
                 every {
@@ -40,10 +67,12 @@ class PermissionResultLauncherTest {
                 } returns mockk<ActivityResultLauncher<Array<String>>>()
             }
 
-        activity.registerForPermissionFlowRequestsResult(mockk(), mockk())
+        activity.registerForPermissionFlowRequestsResult(
+            mockk(), activityResultRegistry = activityResultRegistry)
 
         verify(exactly = 1) {
-            activity.registerForActivityResult(any<RequestPermissionsContract>(), any(), any())
+            activity.registerForActivityResult(
+                any<RequestPermissionsContract>(), activityResultRegistry, any())
         }
     }
 

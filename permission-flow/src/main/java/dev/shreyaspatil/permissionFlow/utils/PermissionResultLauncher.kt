@@ -48,7 +48,7 @@ import dev.shreyaspatil.permissionFlow.contract.RequestPermissionsContract
 @JvmOverloads
 fun ComponentActivity.registerForPermissionFlowRequestsResult(
     requestPermissionsContract: RequestPermissionsContract = RequestPermissionsContract(),
-    activityResultRegistry: ActivityResultRegistry = getActivityResultRegistry(),
+    activityResultRegistry: ActivityResultRegistry = this.activityResultRegistry,
     callback: ActivityResultCallback<Map<String, Boolean>> = emptyCallback(),
 ): ActivityResultLauncher<Array<String>> =
     registerForActivityResult(
