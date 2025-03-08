@@ -1,23 +1,22 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
-        agpVersion = '8.3.1'
-        mavenPublishVersion = '0.27.0'
-        kotlinVersion = '1.9.22'
-        dokkaVersion = '1.9.20'
-        composeBomVersion = '2024.03.00'
-        composeCompilerVersion = '1.5.10'
-        activityVersion = '1.8.2'
-        coroutinesVersion = '1.8.0'
-        appCompatVersion = '1.6.1'
+        agpVersion = '8.9.0'
+        mavenPublishVersion = '0.31.0'
+        kotlinVersion = '2.1.10'
+        dokkaVersion = '2.0.0'
+        composeBomVersion = '2025.02.00'
+        activityVersion = '1.10.1'
+        coroutinesVersion = '1.10.0'
+        appCompatVersion = '1.7.0'
         jUnitVersion = '4.13.2'
-        robolectricVersion = "4.12"
-        mockkVersion = '1.13.10'
+        robolectricVersion = "4.12.2"
+        mockkVersion = '1.13.17'
         turbineVersion = '1.1.0'
         androidxCoreTestingVersion = '1.5.0'
         spotlessVersion = '6.25.0'
         koverVersion = "0.5.1"
-        startupVersion = "1.1.1"
+        startupVersion = "1.2.0"
     }
 }
 
@@ -25,6 +24,7 @@ plugins {
     id 'com.android.application' version "$agpVersion" apply false
     id 'com.android.library' version "$agpVersion" apply false
     id 'org.jetbrains.kotlin.android' version "$kotlinVersion" apply false
+    id 'org.jetbrains.kotlin.plugin.compose' version "$kotlinVersion" apply false
     id 'org.jetbrains.dokka' version "$dokkaVersion"
     id 'com.diffplug.spotless' version "$spotlessVersion" apply false
     id("org.jetbrains.kotlinx.kover") version "$koverVersion" apply false
