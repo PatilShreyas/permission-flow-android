@@ -1,12 +1,17 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'org.jetbrains.kotlin.plugin.compose'
     id 'org.jetbrains.dokka'
     id 'com.vanniktech.maven.publish'
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 android {
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 21
@@ -21,21 +26,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
 
     buildFeatures {
         buildConfig false
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion composeCompilerVersion
     }
 
     packagingOptions {
