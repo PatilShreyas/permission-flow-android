@@ -33,7 +33,7 @@ jobs:
       - name: Publish Library
         run: |
           echo "Publishing library 🚀"
-          ./gradlew publishAllPublicationsToMavenCentral --no-configuration-cache
+          ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_VERSION_NAME: ${{ github.event.inputs.versionName }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_KEY }}
